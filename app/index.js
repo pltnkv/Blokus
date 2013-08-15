@@ -7,14 +7,17 @@
  */
 
 var http = require("http");
+var log = require("winston");
+
+
+
 
 function onRequest(request, response) {
-    console.log("Request received.");
+    log.error("Request received.");
+    log.error('er2');
     response.writeHead(200, {"Content-Type": "text/plain"});
     response.write("Hello World");
     response.end();
 }
 
 http.createServer(onRequest).listen(8888);
-
-console.log("asd");
