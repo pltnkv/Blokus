@@ -6,18 +6,23 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var http = require("http");
-var log = require("winston");
+
+var express = require('express'),
+    swig = require('swig'),
+    app = express();
+
+// assign the swig engine to .html files
+app.engine('html', swig.renderFile);
+
+// set .html as the default extension
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
 
 
+app.get('/', function(req, res){
+    res.render('index', {
+        title: 'Consolidate.js'
+    });
+});
 
-
-function onRequest(request, response) {
-    log.error("Request received.");
-    log.error('er2');
-    response.writeHead(200, {"Content-Type": "text/plain"});
-    response.write("Hello World");
-    response.end();
-}
-
-http.createServer(onRequest).listen(8888);
+app.listen(3000);
