@@ -7,9 +7,13 @@
  */
 
 
-var express = require('express'),
-    swig = require('swig'),
-    app = express();
+var express = require('express')
+    , app = express()
+    , http = require('http')
+    , server = http.createServer(app)
+    , io = require('socket.io').listen(server)
+    , swig = require('swig');
+
 
 // assign the swig engine to .html files
 app.engine('html', swig.renderFile);
@@ -19,10 +23,18 @@ app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
 
 
-app.get('/', function(req, res){
+app.get('/', function (req, res) {
+    console.log("asd");
     res.render('index', {
         title: 'Consolidate.js'
     });
 });
 
-app.listen(3000);
+io.sockets.on('connection', function (socket) {
+    socket.emit('news', { hello: 'world' });
+    socket.on('my other event', function (data) {
+        console.log(data);
+    });
+});
+
+server.listen(8888);
