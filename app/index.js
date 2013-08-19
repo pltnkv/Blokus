@@ -12,6 +12,7 @@ var express = require('express')
     , http = require('http')
     , server = http.createServer(app)
     , io = require('socket.io').listen(server)
+    , log = require('logger')(module)
     , swig = require('swig');
 
 
@@ -20,12 +21,13 @@ app.engine('html', swig.renderFile);
 
 // set .html as the default extension
 app.set('view engine', 'html');
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/../client/views');
 
+log.info("path = " + __dirname + '../client/views');
 
 app.get('/', function (req, res) {
-    console.log("asd");
-    res.render('index', {
+    log.info("asd 2 ");
+    res.render('index2', {
         title: 'Consolidate.js'
     });
 });
