@@ -26,11 +26,23 @@ app.set('views', __dirname + '/../client/views');
 log.info("path = " + __dirname + '../client/views');
 
 app.get('/', function (req, res) {
-    log.info("asd 2 ");
-    res.render('index2', {
+    log.info("index");
+    res.render('index', {
         title: 'Consolidate.js'
     });
 });
+
+app.get('/yandex_6bb0bc8153eeec86.html', function (req, res) {
+    log.info("bot_yandex");
+    res.render('bot_yandex', {});
+});
+
+app.get('/googlefda7d37e6aaac9e1.html', function (req, res) {
+    log.info("bot_google");
+    res.render('bot_google', {});
+});
+
+
 
 io.sockets.on('connection', function (socket) {
     socket.emit('news', { hello: 'world' });
