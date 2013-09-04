@@ -13,35 +13,24 @@ var express = require('express')
     , server = http.createServer(app)
     , io = require('socket.io').listen(server)
     , log = require('logger')(module)
-    , swig = require('swig');
+    , swig = require('swig')
+    , config = require('../config.json')
+    , routes = require('./routes.js');
+
 
 
 // assign the swig engine to .html files
 app.engine('html', swig.renderFile);
 
-// set .html as the default extension
 app.set('view engine', 'html');
 app.set('views', __dirname + '/../client/views');
+app.set('view cache', false);
 
-log.info("path = " + __dirname + '../client/views');
+app.use(express.static(__dirname + '/../client/public'));
 
-app.get('/', function (req, res) {
-    log.info("index");
-    res.render('index', {
-        title: 'Consolidate.js'
-    });
-});
 
-app.get('/yandex_6bb0bc8153eeec86.html', function (req, res) {
-    log.info("bot_yandex");
-    res.render('bot_yandex', {});
-});
 
-app.get('/googlefda7d37e6aaac9e1.html', function (req, res) {
-    log.info("bot_google");
-    res.render('bot_google', {});
-});
-
+routes.init(app);
 
 
 io.sockets.on('connection', function (socket) {
@@ -51,4 +40,6 @@ io.sockets.on('connection', function (socket) {
     });
 });
 
-server.listen(8888);
+log.info("config: " + config.host, config.port);
+server.listen(config.port, config.host);
+log.info("Server started");
