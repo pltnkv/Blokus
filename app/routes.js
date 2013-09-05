@@ -13,37 +13,27 @@ function init(app) {
 
     app.get('/newgame', function (req, res) {
         log.info("newgame");
-        res.render('newgame', {
-            title: 'Consolidate.js'
-        });
+        res.render('newgame', makeParams());
     });
 
     app.get('/listgames', function (req, res) {
         log.info("listgames");
-        res.render('listgames', {
-            title: 'Consolidate.js'
-        });
+        res.render('listgames', makeParams());
     });
 
     app.get('/game', function (req, res) {
         log.info("game");
-        res.render('game', {
-            title: 'Consolidate.js'
-        });
+        res.render('game', makeParams({qwe:123}));
     });
 
     app.get('/results', function (req, res) {
         log.info("results");
-        res.render('results', {
-            title: 'Consolidate.js'
-        });
+        res.render('results', makeParams());
     });
 
     app.get('/', function (req, res) {
         log.info("index");
-        res.render('index', {
-            title: 'Consolidate.js'
-        });
+        res.render('index', makeParams());
     });
 
     //######################################
@@ -54,15 +44,21 @@ function init(app) {
     //######################################
     // SEO
     //######################################
-    app.get('/yandex_6bb0bc8153eeec86.html', function (req, res) {
-        log.info("bot_yandex");
-        res.render('bot_yandex', {});
-    });
 
-    app.get('/googlefda7d37e6aaac9e1.html', function (req, res) {
-        log.info("bot_google");
-        res.render('bot_google', {});
-    });
+
+    //######################################
+    // HELPERS
+    //######################################
+    var debug = app.get('debug');
+    function makeParams(value) {
+        if(value == undefined) {
+            value = {};
+        }
+        value.debug = debug;
+        return value;
+    }
 }
+
+
 
 exports.init = init;

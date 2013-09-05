@@ -1,28 +1,60 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        /*var socket = io.connect('http://localhost:8888');
-        socket.on('news', function (data) {
-            console.log(data);
-            socket.emit('my other event', { my: 'data' });
-        });*/
-    </script>
-    <title>Blokus online game</title>
-</head>
-<body>
-<center>
-<p><b>Blokus online — онлайн версия</b> популярной стратегической настольной игры для двух, трех или четырех человек, изобретенной французским математиком Бернардом Тавитианом.<br>
-Существуют несколько видов блокуса: классический (Blokus Classic), для двоих (Blokus Duo или Blokus Travel), треугольный (Blokus Trigon) и трехмерный (Blokus 3D).
-    <br />
-Запуск в октябре 2013 года.
-</p>
-<p>
-<b>Blokus online — is online version</b> of an abstract strategy board game for two to four players.
-<br />
-Start in oct 2013.
-</p>
-</center>
-</body>
-</html>
+{% extends 'base.html' %}
+
+
+{% block head %}
+{% parent %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+    $(function(){
+        var email = 'pltnkv' + '0@gmail';
+        $('.email').attr('href', 'mailto:'+email);
+        $('.email').text(email);
+    });
+</script>
+
+<style>
+    body {
+        padding-top: 70px;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<!-- Fixed navbar -->
+<div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Blokus online game</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="jumbotron">
+        <h1>Blokus</h1>
+        <br />
+        <p><b>Blokus online — онлайн версия</b> популярной стратегической настольной игры для двух, трех или четырех человек, изобретенной французским математиком Бернардом Тавитианом.<br>
+            Существуют несколько видов блокуса: классический блокус(Blokus Classic), блокус для двоих (Blokus Duo или Blokus Travel), треугольный блокус (Blokus Trigon) и трехмерный (Blokus 3D).
+            <br />
+            Запуск в октябре 2013 года.
+            <br />
+            За подробностями пишите на: <a class='email' href=''></a>
+        </p>
+        <br />
+        <p>
+            <b>Blokus online — is online version</b> of an abstract strategy board game for two to four players.
+            <br />
+            Start in oct 2013.
+            <br />
+            Contacts: <a class='email' href=''></a>
+        </p>
+        <p>
+            <!--<a class="btn btn-lg btn-primary" href="../../components/#navbar">Send request</a>-->
+        </p>
+    </div>
+
+</div>
+{% endblock %}

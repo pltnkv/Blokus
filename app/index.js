@@ -18,16 +18,20 @@ var express = require('express')
     , routes = require('./routes.js');
 
 
+swig.setDefaults({ ttt: 'test' });
 
 // assign the swig engine to .html files
 app.engine('html', swig.renderFile);
 
+
+app.set('debug', config.debug);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/../client/views');
 app.set('view cache', false);
 
 app.use(express.static(__dirname + '/../client/public'));
 
+log.info('debug = '  +app.get('debug'));
 
 
 routes.init(app);
