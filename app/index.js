@@ -18,8 +18,6 @@ var express = require('express')
     , routes = require('./routes.js');
 
 
-swig.setDefaults({ ttt: 'test' });
-
 // assign the swig engine to .html files
 app.engine('html', swig.renderFile);
 

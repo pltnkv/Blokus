@@ -23,6 +23,26 @@
     {% endif %}
 </head>
 <body>
+
+<!-- Fixed navbar -->
+{% block header %}
+<div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Blokus online game</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/">Home</a></li>
+                <li><a href="/newgame">Create game</a></li>
+                <li><a href="/listgames">List games</a></li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+{% endblock%}
+
 {% block content %}{% endblock %}
 </body>
 </html>

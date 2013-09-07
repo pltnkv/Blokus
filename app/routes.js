@@ -5,10 +5,14 @@
  * Time: 21:35
  * To change this template use File | Settings | File Templates.
  */
-var log = require('logger')(module);
+var log = require('logger')(module)
+    , core = require('core');
+
+var game = core.gamesManager.createGame('qwe');
+log.info('core');
+log.info('game =  ' + game.getTitle());
 
 function init(app) {
-
 
 
     app.get('/newgame', function (req, res) {
@@ -23,7 +27,8 @@ function init(app) {
 
     app.get('/game', function (req, res) {
         log.info("game");
-        res.render('game', makeParams({qwe:123}));
+        res.send('gametitle: ' + req.query.gametitle);
+        //res.render('game', makeParams({qwe:123}));
     });
 
     app.get('/results', function (req, res) {
@@ -50,15 +55,15 @@ function init(app) {
     // HELPERS
     //######################################
     var debug = app.get('debug');
+
     function makeParams(value) {
-        if(value == undefined) {
+        if (value == undefined) {
             value = {};
         }
         value.debug = debug;
         return value;
     }
 }
-
 
 
 exports.init = init;
