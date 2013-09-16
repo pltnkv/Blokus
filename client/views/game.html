@@ -3,7 +3,9 @@
 {% block head %}
 {% parent %}
 
+<link rel="stylesheet" href="/css/game.css">
 <script src="/socket.io/socket.io.js"></script>
+<script src="/js/game.js"></script>
 <script>
     /*var socket = io.connect('http://localhost:8888');
      socket.on('news', function (data) {
@@ -13,27 +15,12 @@
 </script>
 {% endblock %}
 
-{% block content %}
-<div class="container" style="margin-top:80px;">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Create new game</h3>
-        </div>
-        <div class="panel-body">
-            <form>
-                <div class="input-group input-group-sm">
-                    <span class="input-group-addon">Title</span>
-                    <input type="text" class="form-control" placeholder="Input game title">
-                </div>
-                <select class="selectpicker">
-                    <option>Mustard</option>
-                    <option>Ketchup</option>
-                    <option>Relish</option>
-                </select>
-            </form>
-        </div>
-    </div>
+{% block header %}
+{% endblock%}
 
+
+{% block content %}
+<div id="content">
 </div>
 {% endblock %}
 

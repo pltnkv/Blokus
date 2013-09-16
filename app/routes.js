@@ -27,8 +27,8 @@ function init(app) {
 
     app.get('/game', function (req, res) {
         log.info("game");
-        res.send('gametitle: ' + req.query.gametitle);
-        //res.render('game', makeParams({qwe:123}));
+        //res.send('gametitle: ' + req.query.gametitle);
+        res.render('game', makeParams({qwe:123}));
     });
 
     app.get('/results', function (req, res) {
