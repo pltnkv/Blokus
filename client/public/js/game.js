@@ -12,12 +12,15 @@ var game = function () {
 
 	gameField = new GameField();
 
+	//создать независимую
+
+
+	var shapes = shapesStorage.cloneItems();
+	console.log(shapes);
 	for (i = 0, l = shapes.length; i < l; i++) {
 		var shapeInfo = shapes[i];
 		el = new Shape(shapeInfo, gameField);
 	}
-
-
 }
 
 
@@ -37,24 +40,10 @@ var Shape = (function () {
 		that.wLenght = 0;
 		that.hLenght = 0;
 
-		var htmlView = '<div class="game-shape">';
-		for (var i = 0; i < 5; i++) {
-			for (var j = 0; j < 5; j++) {
-				if (info.data[i][j] != 0) {
-					var style = "width:{0}px; height:{0}px; left:{1}px; top:{2}px;".format(blockSize, blockSize * j, blockSize * i);
-					htmlView += '<div class="shape-block" style="' + style + '"></div>';
-					if (that.wLenght < j) {
-						that.wLenght = j;
-					}
-					if (that.hLenght < i) {
-						that.hLenght = i;
-					}
-				}
-			}
-		}
-		htmlView += '</div>';
-		that.visual = $(htmlView);
+		that.visual = $('<div class="game-shape"></div>');
 		that.visual.appendTo("body");
+
+		this.visualize();
 
 		//set default position
 		that.x = that.info.offX + shapesMarginLeft;
@@ -104,6 +93,7 @@ var Shape = (function () {
 			} else {
 				that.upend();
 			}
+			return false;
 		}
 	};
 
@@ -123,14 +113,81 @@ var Shape = (function () {
 
 	//повернуть 1 раз по часовой стрелке
 	Shape.prototype.turn = function () {
-
+		this.normalizeData();
+		this.visualize();
 	};
 
 	//перевернуть фигуру
 	Shape.prototype.upend = function () {
+		var data = this.info.data,
+			tempLine0 = data[0],
+			tempLine1 = data[1];
+		data[0] = data[4];
+		data[1] = data[3];
+		data[3] = tempLine1;
+		data[4] = tempLine0;
 
+		this.normalizeData();
+		this.visualize();
 	};
 
+	Shape.prototype.normalizeData = function () {
+		var i, j, l,
+			doOffsetV = true,
+			doOffsetH = true,
+			data = this.info.data,
+			offsetV = 0,
+			offsetH = 0;
+
+		i = 0;
+		do {
+			for (j = 0; j < 5; j++) {
+				doOffsetV = doOffsetV && data[i][j] == 0;
+				doOffsetH = doOffsetH && data[j][i] == 0;
+			}
+			if (doOffsetV) offsetV++;
+			if (doOffsetH) offsetH++;
+		} while ((doOffsetV || doOffsetH) && i < 5);
+
+
+		//remove vertical offset
+		if(offsetV > 0) {
+			for (i = 0, l = 5 - offsetV; i < l; i++) {
+				data[i] = data[i + offsetV];
+			}
+		}
+
+		//remove horizontal offset
+		if(offsetH > 0) {
+			var offArr = [];
+			for (i = 0; i < offsetH; i++) {
+				offArr[i] = 0;
+			}
+			for (i = 0; i < 5; i++) {
+				data[i] = data[i].slice(offsetH).concat(offArr);
+			}
+		}
+	};
+
+	Shape.prototype.visualize = function () {
+		var htmlView = '', data = this.info.data;
+		for (var i = 0; i < 5; i++) {
+			for (var j = 0; j < 5; j++) {
+				if (data[i][j] != 0) {
+					var style = "width:{0}px; height:{0}px; left:{1}px; top:{2}px;".format(blockSize, blockSize * j, blockSize * i);
+					htmlView += '<div class="shape-block" style="' + style + '"></div>';
+					if (this.wLenght < j) {
+						this.wLenght = j;
+					}
+					if (this.hLenght < i) {
+						this.hLenght = i;
+					}
+				}
+			}
+		}
+
+		this.visual.html(htmlView);
+	};
 
 	return Shape;
 })();
