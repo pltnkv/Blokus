@@ -113,6 +113,24 @@ var Shape = (function () {
 
 	//повернуть 1 раз по часовой стрелке
 	Shape.prototype.turn = function () {
+		var i, j,
+			data = this.info.data,
+			tempData = [];
+
+		//копирование в промежуточный массив
+		for (i = 0; i < 5; i++) {
+			tempData[i] = [];
+			for (j = 0; j < 5; j++) {
+				tempData[i][j] = data[i][j];
+			}
+		}
+
+		for (i = 0; i < 5; i++) {
+			for (j = 0; j < 5; j++) {
+				data[4 - j][i] = tempData[i][j];
+			}
+		}
+
 		this.normalizeData();
 		this.visualize();
 	};
@@ -147,18 +165,22 @@ var Shape = (function () {
 			}
 			if (doOffsetV) offsetV++;
 			if (doOffsetH) offsetH++;
+			i++;
 		} while ((doOffsetV || doOffsetH) && i < 5);
 
 
 		//remove vertical offset
-		if(offsetV > 0) {
+		if (offsetV > 0) {
 			for (i = 0, l = 5 - offsetV; i < l; i++) {
 				data[i] = data[i + offsetV];
+			}
+			for (i = 5 - offsetV; i < 5; i++) {
+				data[i] = [0, 0, 0, 0, 0];
 			}
 		}
 
 		//remove horizontal offset
-		if(offsetH > 0) {
+		if (offsetH > 0) {
 			var offArr = [];
 			for (i = 0; i < offsetH; i++) {
 				offArr[i] = 0;
@@ -263,15 +285,6 @@ var GameFieldBlock = (function () {
 		var htmlView = '<div class="field-block" style="' + style + '"></div>';
 
 		that.visual = $(htmlView);
-	};
-
-
-	GameFieldBlock.prototype.getVisual = function () {
-		return this.visual;
-	};
-
-	GameFieldBlock.prototype.setInfo = function (id, calor) {
-		return this.visual;
 	};
 
 
