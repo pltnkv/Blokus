@@ -37,8 +37,6 @@ var Shape = (function () {
 		var offsetX, offsetY;
 
 		that.info = info;
-		that.wLenght = 0;
-		that.hLenght = 0;
 
 		that.visual = $('<div class="game-shape"></div>');
 		that.visual.appendTo("body");
@@ -193,6 +191,9 @@ var Shape = (function () {
 
 	Shape.prototype.visualize = function () {
 		var htmlView = '', data = this.info.data;
+		this.wLenght = 0;
+		this.hLenght = 0;
+
 		for (var i = 0; i < 5; i++) {
 			for (var j = 0; j < 5; j++) {
 				if (data[i][j] != 0) {
