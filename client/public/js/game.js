@@ -5,41 +5,22 @@
  * Time: 22:29
  * To change this template use File | Settings | File Templates.
  */
-var game = function () {
 
-	//prepare shapes
-	var el, i, l, gameField;
+var fieldSize = 20,
+	fieldLeft = 400,
+	fieldTop = 50,
+	fieldRight = fieldSize * settings.blockSize + fieldLeft,
+	fieldBottom = fieldSize * settings.blockSize + fieldTop;
 
-	gameField = new GameField();
+var GameField = Class.$extend({
 
-	//создать независимую
-	var shapes = shapesStorage.cloneItems();
-	console.log(shapes);
-	for (i = 0, l = shapes.length; i < l; i++) {
-		var shapeInfo = shapes[i];
-		el = new Shape(shapeInfo, gameField);
-	}
-}
-
-var GameField = (function () {
-	// static private variables
-	var fieldSize = 20,
-		fieldLeft = 400,
-		fieldTop = 50,
-		fieldRight = fieldSize * settings.blockSize + fieldLeft,
-		fieldBottom = fieldSize * settings.blockSize + fieldTop;
+	__init__: function () {
+		var blocks = [];
 
 
-	// constructor
-	function GameField() {
-		var that = this;
-		var blocks = [],
-			visual;
-
-
-		that.visual = visual = $('<div class="game-field"></div>');
-		visual.css('left', fieldLeft).css('top', fieldTop);
-		visual.appendTo("body");
+		this.visual = $('<div class="game-field"></div>');
+		this.visual.css('left', fieldLeft).css('top', fieldTop);
+		this.visual.appendTo("body");
 
 		//filling
 		var i, j, block;
@@ -49,16 +30,16 @@ var GameField = (function () {
 			}
 			for (j = 0; j < fieldSize; j++) {
 				block = new GameFieldBlock(j, i);
-				block.visual.appendTo(visual);
+				block.visual.appendTo(this.visual);
 
 				blocks[i][j] = block;
 			}
 		}
 
-	};
+	},
 
 
-	GameField.prototype.checkOnSnap = function (shape, posX, posY) {
+	checkOnSnap: function (shape, posX, posY) {
 		var snapPoint = {'x': posX, 'y': posY, overField: false},
 			blockX, blockY;
 
@@ -73,37 +54,39 @@ var GameField = (function () {
 			}
 		}
 		return snapPoint;
-	};
+	},
+
+	setShape: function (shape, posX, posY) {
+		var snapPoint = {'x': posX, 'y': posY, overField: false},
+			blockX, blockY;
+
+		if (posX > fieldLeft && posX < fieldRight && posY > fieldTop && posY < fieldBottom) {
+			blockX = div(posX - fieldLeft, settings.blockSize);
+			blockY = div(posY - fieldTop, settings.blockSize);
+			//использовать привязку, если фигура вписывается в поле
+			if (fieldSize - shape.wLenght - blockX > 0 && fieldSize - shape.hLenght - blockY > 0) {
+				snapPoint.x = fieldLeft + blockX * settings.blockSize;
+				snapPoint.y = fieldTop + blockY * settings.blockSize;
+				snapPoint.overField = true;
+			}
+		}
+		return snapPoint;
+	}
+
+});
 
 
-	return GameField;
-})();
-
-
-var GameFieldBlock = (function () {
-
-	function GameFieldBlock(posX, posY) {
-		var that = this;
-		that.posX = posX;
-		that.posY = posY;
-
+var GameFieldBlock = Class.$extend({
+	__init__: function (posX, posY) {
 		var style = "width:{0}px; height:{0}px; left:{1}px; top:{2}px;".format(settings.blockSize, settings.blockSize * posX, settings.blockSize * posY);
 		var htmlView = '<div class="field-block" style="' + style + '"></div>';
-
-		that.visual = $(htmlView);
-	};
-
-
-	return GameFieldBlock;
-})();
+		this.visual = $(htmlView);
+	}
+});
 
 
 var maxZIndex = 100;
 var Shape = Class.$extend({
-
-	__classvars__: {
-		MAX_ITEMS: 42
-	},
 
 	__init__: function (info, colorClass, gameField) {
 
