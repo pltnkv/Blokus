@@ -18,11 +18,14 @@ if (!String.prototype.format) {
 	};
 }
 
+
+
 function div(p1, p2) {
 	return (p1 - (p1 % p2)) / p2;
 }
 
 var undefined;
+document = document;// for code intelligence
 
 //game settings
 var settings = {

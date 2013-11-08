@@ -13,6 +13,7 @@ var App = Class.$extend({
 	run: function (params) {
 		this.prepareGameField();
 		this.preparePlayers(params);
+		this.nextPlayer();
 	},
 
 	prepareGameField: function () {
@@ -22,12 +23,26 @@ var App = Class.$extend({
 	preparePlayers: function (params) {
 		var i, plr;
 
+		this.currentPlayer = -1;
 		this.players = [];
+
 		for (i = 0; i < params.players.length; i++) {
 			plr = new Player(params.players[i].id, params.players[i].name);
 			this.players.push(plr);
 		}
+	},
+
+	nextPlayer: function () {
+		if (this.currentPlayer == -1) {
+			this.currentPlayer = 0;
+		} else {
+			var numPlayers = this.players.length;
+			this.players[this.currentPlayer].hide();
+			this.currentPlayer = this.currentPlayer + 1 == numPlayers ? 0 : this.currentPlayer + 1;
+		}
+		this.players[this.currentPlayer].play();
 	}
+
 });
 
 
@@ -40,10 +55,10 @@ var ServerConnector = Class.$extend({
 		var params = {
 			gameType: 1,//offline
 			players: [
-				{id: 1, name: 'Green'},
-				{id: 2, name: 'Blue'},
-				{id: 3, name: 'Yellow'},
-				{id: 4, name: 'Red'}
+				{id: 0, name: 'Green'},
+				{id: 1, name: 'Blue'},
+				{id: 2, name: 'Yellow'},
+				{id: 3, name: 'Red'}
 			]
 		};
 		app.run(params);
@@ -60,21 +75,26 @@ var Player = Class.$extend({
 	},
 
 	createShapes: function () {
-		var i, l, shapeInfos = shapesStorage.cloneItems();
+		var shapeInfos = shapesStorage.cloneItems(),
+			colorClass = 'shape-block-color' + this.id;
 
 		this.shapes = [];
 
-		for (i = 0, l = shapeInfos.length; i < l; i++) {
-			this.shapes.push(new Shape(shapeInfos[i], app.field));
+		for (var i = 0, l = shapeInfos.length; i < l; i++) {
+			this.shapes.push(new Shape(shapeInfos[i], colorClass, app.field));
 		}
 	},
 
 	play: function () {
-
+		for (var i = 0, l = this.shapes.length; i < l; i++) {
+			this.shapes[i].visible(true);
+		}
 	},
 
 	hide: function () {
-
+		for (var i = 0, l = this.shapes.length; i < l; i++) {
+			this.shapes[i].visible(false);
+		}
 	}
 
 });

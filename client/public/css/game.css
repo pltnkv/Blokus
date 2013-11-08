@@ -11,8 +11,24 @@
 
 .shape-block {
     position: absolute;
+
+}
+
+.shape-block-color0 {
     border: 1px solid #D25B5E;
     background-color: #D93B3B;
+}
+.shape-block-color1 {
+    border: 1px solid #FAF3A7;
+    background-color: #F2DE00;
+}
+.shape-block-color2 {
+    border: 1px solid #82E37D;
+    background-color: #09BD00;
+}
+.shape-block-color3 {
+    border: 1px solid #99A5F2;
+    background-color: #2340FA;
 }
 
 .game-field {
