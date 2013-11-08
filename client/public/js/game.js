@@ -15,7 +15,7 @@ var fieldSize = 20,
 var GameField = Class.$extend({
 
 	__init__: function () {
-		var blocks = [];
+		this.blocks = [];
 
 
 		this.visual = $('<div class="game-field"></div>');
@@ -25,14 +25,14 @@ var GameField = Class.$extend({
 		//filling
 		var i, j, block;
 		for (i = 0; i < fieldSize; i++) {
-			if (blocks[i] == undefined) {
-				blocks[i] = [];
+			if (this.blocks[i] == undefined) {
+				this.blocks[i] = [];
 			}
 			for (j = 0; j < fieldSize; j++) {
 				block = new GameFieldBlock(j, i);
 				block.visual.appendTo(this.visual);
 
-				blocks[i][j] = block;
+				this.blocks[i][j] = block;
 			}
 		}
 
@@ -51,26 +51,25 @@ var GameField = Class.$extend({
 				snapPoint.x = fieldLeft + blockX * settings.blockSize;
 				snapPoint.y = fieldTop + blockY * settings.blockSize;
 				snapPoint.overField = true;
+				snapPoint.blockX = blockX;
+				snapPoint.blockY = blockY;
 			}
 		}
 		return snapPoint;
 	},
 
-	setShape: function (shape, posX, posY) {
-		var snapPoint = {'x': posX, 'y': posY, overField: false},
-			blockX, blockY;
+	setShape: function (shape, blockX, blockY) {
+		//filling
+		var i, j, shapeData = shape.info.data;
+		console.log(shapeData, blockX, blockY);
 
-		if (posX > fieldLeft && posX < fieldRight && posY > fieldTop && posY < fieldBottom) {
-			blockX = div(posX - fieldLeft, settings.blockSize);
-			blockY = div(posY - fieldTop, settings.blockSize);
-			//использовать привязку, если фигура вписывается в поле
-			if (fieldSize - shape.wLenght - blockX > 0 && fieldSize - shape.hLenght - blockY > 0) {
-				snapPoint.x = fieldLeft + blockX * settings.blockSize;
-				snapPoint.y = fieldTop + blockY * settings.blockSize;
-				snapPoint.overField = true;
+		for (i = 0; i < 5; i++) {
+			for (j = 0; j < 5; j++) {
+				if (shapeData[i][j] != 0) {
+					this.blocks[blockY + i][blockX + j].setColorClass(shape.colorClass);
+				}
 			}
 		}
-		return snapPoint;
 	}
 
 });
@@ -81,6 +80,10 @@ var GameFieldBlock = Class.$extend({
 		var style = "width:{0}px; height:{0}px; left:{1}px; top:{2}px;".format(settings.blockSize, settings.blockSize * posX, settings.blockSize * posY);
 		var htmlView = '<div class="field-block" style="' + style + '"></div>';
 		this.visual = $(htmlView);
+	},
+
+	setColorClass: function (className) {
+		this.visual.addClass(className);
 	}
 });
 
@@ -108,7 +111,6 @@ var Shape = Class.$extend({
 		//set default position
 		this.x(this.info.offX + shapesMarginLeft);
 		this.y(this.info.offY + shapesMarginTop);
-		console.log(this.y());
 
 		this.visual.mousedown(down);
 
@@ -138,9 +140,11 @@ var Shape = Class.$extend({
 			$(document).unbind('mousemove', move);
 			$(document).unbind('mouseup', up);
 			$(document).unbind('mousewheel', mousewheel);
-			var success = gameField.checkOnSnap(that, e.clientX - offsetX, e.clientY - offsetY).overField;
-			if (success) {
-				app.nextPlayer();
+			var snapPoint = gameField.checkOnSnap(that, e.clientX - offsetX, e.clientY - offsetY);
+			if (snapPoint.overField) {
+				gameField.setShape(that, snapPoint.blockX, snapPoint.blockY);
+				that.visible(false);
+				//app.nextPlayer();
 			} else {
 				//to default position
 				that.x(that.info.offX + shapesMarginLeft);

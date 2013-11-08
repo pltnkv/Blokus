@@ -15,20 +15,20 @@
 }
 
 .shape-block-color0 {
-    border: 1px solid #D25B5E;
-    background-color: #D93B3B;
+    border: 1px solid #D25B5E !important;
+    background-color: #D93B3B !important;
 }
 .shape-block-color1 {
-    border: 1px solid #FAF3A7;
-    background-color: #F2DE00;
+    border: 1px solid #FAF3A7 !important;
+    background-color: #F2DE00 !important;
 }
 .shape-block-color2 {
-    border: 1px solid #82E37D;
-    background-color: #09BD00;
+    border: 1px solid #82E37D !important;
+    background-color: #09BD00 !important;
 }
 .shape-block-color3 {
-    border: 1px solid #99A5F2;
-    background-color: #2340FA;
+    border: 1px solid #99A5F2 !important;
+    background-color: #2340FA !important;
 }
 
 .game-field {
