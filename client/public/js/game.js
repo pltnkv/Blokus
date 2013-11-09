@@ -16,13 +16,13 @@ var GameField = Class.$extend({
 
 	__init__: function () {
 		this.blocks = [];
-
+		this.data = [];
 
 		this.visual = $('<div class="game-field"></div>');
 		this.visual.css('left', fieldLeft).css('top', fieldTop);
 		this.visual.appendTo("body");
 
-		//filling
+		//filling visual blocks
 		var i, j, block;
 		for (i = 0; i < fieldSize; i++) {
 			if (this.blocks[i] == undefined) {
@@ -36,6 +36,20 @@ var GameField = Class.$extend({
 			}
 		}
 
+		//filling empty data with borders
+		for (i = 0; i < fieldSize + 2; i++) {
+			if (this.data[i] == undefined) {
+				this.data[i] = [];
+			}
+			for (j = 0; j < fieldSize + 2; j++) {
+				this.data[i][j] = 0;
+			}
+		}
+
+		this.data[fieldSize + 1][0] = 2; //red
+		this.data[0][0] = 4; //yellow
+		this.data[0][fieldSize + 1] = 6; //green
+		this.data[fieldSize + 1][fieldSize + 1] = 8; //blue
 	},
 
 
@@ -44,29 +58,89 @@ var GameField = Class.$extend({
 			blockX, blockY;
 
 		if (posX > fieldLeft && posX < fieldRight && posY > fieldTop && posY < fieldBottom) {
-			blockX = div(posX - fieldLeft, settings.blockSize);
+			blockX = div(posX - fieldLeft, settings.blockSize)
 			blockY = div(posY - fieldTop, settings.blockSize);
 			//использовать привязку, если фигура вписывается в поле
-			if (fieldSize - shape.wLenght - blockX > 0 && fieldSize - shape.hLenght - blockY > 0) {
+			if (fieldSize - shape.wLenght - blockX >= 0 && fieldSize - shape.hLenght - blockY >= 0) {
 				snapPoint.x = fieldLeft + blockX * settings.blockSize;
 				snapPoint.y = fieldTop + blockY * settings.blockSize;
 				snapPoint.overField = true;
-				snapPoint.blockX = blockX;
-				snapPoint.blockY = blockY;
+				snapPoint.blockX = blockX + 1;//учитываем хак с инициирующими границами
+				snapPoint.blockY = blockY + 1;
 			}
 		}
 		return snapPoint;
 	},
 
+
+	checkRulesCompliance: function (shape, blockX, blockY) {
+		console.log('checkRulesCompliance', blockX, blockY);
+		var res = false;
+		if (this.checkNoIntersections(shape, blockX, blockY) &&
+			this.checkFriendlyContact(shape, blockX, blockY)) {
+			res = true;
+		}
+		return res;
+	},
+
+	checkNoIntersections: function (shape, blockX, blockY) {
+		var i, j, iLen, jLen, shapeData = shape.data;
+		for (i = 0, iLen = shape.hLenght; i < iLen; i++) {
+			for (j = 0, jLen = shape.wLenght; j < jLen; j++) {
+				if (this.data[blockY + i][blockX + j] != 0 && shapeData[i][j] != 0) {
+					return false;
+				}
+			}
+		}
+		return true;
+	},
+
+	checkFriendlyContact: function (shape, blockX, blockY) {
+		var i, j, iLen, jLen, shapeData = shape.data;
+		var angleContactExist = false;
+		var contactNumber = shape.contactNumber;
+
+		console.log(this.data);
+
+		for (i = 0, iLen = shape.hLenght; i < iLen; i++) {
+			for (j = 0, jLen = shape.wLenght; j < jLen; j++) {
+				//проверка угловых контактов
+				var posx = blockX + j,
+					posy = blockY + i;
+				if (!angleContactExist && shapeData[i][j] == contactNumber) {
+					if (this.data[posy + 1][posx + 1] == contactNumber ||
+						this.data[posy + 1][posx - 1] == contactNumber ||
+						this.data[posy - 1][posx + 1] == contactNumber ||
+						this.data[posy - 1][posx - 1] == contactNumber) {
+						angleContactExist = true;
+					}
+				}
+
+				//проверка прямых контактов
+				if (shapeData[i][j] == contactNumber || shapeData[i][j] == contactNumber - 1) {
+					if (this.data[posy][posx + 1] == contactNumber || this.data[posy][posx + 1] == contactNumber - 1 ||
+						this.data[posy][posx - 1] == contactNumber || this.data[posy][posx - 1] == contactNumber - 1 ||
+						this.data[posy + 1][posx] == contactNumber || this.data[posy + 1][posx] == contactNumber - 1 ||
+						this.data[posy - 1][posx] == contactNumber || this.data[posy - 1][posx] == contactNumber - 1) {
+						return false;
+					}
+				}
+			}
+		}
+		return angleContactExist;
+	},
+
+
 	setShape: function (shape, blockX, blockY) {
 		//filling
-		var i, j, shapeData = shape.info.data;
-		console.log(shapeData, blockX, blockY);
+		var i, j, iLen, jLen, shapeData = shape.data;
+		console.log(shapeData, blockX, blockY, shape.hLenght, shape.wLenght);
 
-		for (i = 0; i < 5; i++) {
-			for (j = 0; j < 5; j++) {
+		for (i = 0, iLen = shape.hLenght; i < iLen; i++) {
+			for (j = 0, jLen = shape.wLenght; j < jLen; j++) {
 				if (shapeData[i][j] != 0) {
-					this.blocks[blockY + i][blockX + j].setColorClass(shape.colorClass);
+					this.blocks[blockY + i - 1][blockX + j - 1].setColorClass(shape.colorClass);
+					this.data[blockY + i][blockX + j] = shapeData[i][j];
 				}
 			}
 		}
@@ -91,7 +165,7 @@ var GameFieldBlock = Class.$extend({
 var maxZIndex = 100;
 var Shape = Class.$extend({
 
-	__init__: function (info, colorClass, gameField) {
+	__init__: function (info, player, gameField) {
 
 		var shapesMarginTop = 50,
 			shapesMarginLeft = 30;
@@ -99,14 +173,30 @@ var Shape = Class.$extend({
 		var that = this;
 		var offsetX, offsetY;
 
+		this.used = false;
 		this.info = info;
-		this.colorClass = colorClass;
+		this.data = info.data;
+		this.colorClass = 'shape-block-color' + player.id;
+		this.contactNumber = 2 + player.id * 2;
 
 		this.visual = $('<div class="game-shape"></div>');
 		this.visual.appendTo("body");
 
 		this.visible(false);
 		this.visualize();
+
+
+		//remember default data
+		var i, j;
+		this.defaultData = [];
+		for (i = 0; i < 5; i++) {
+			if (this.defaultData[i] == undefined) {
+				this.defaultData[i] = [];
+			}
+			for (j = 0; j < 5; j++) {
+				this.defaultData[i][j] = this.data[i][j];
+			}
+		}
 
 		//set default position
 		this.x(this.info.offX + shapesMarginLeft);
@@ -128,8 +218,6 @@ var Shape = Class.$extend({
 		}
 
 		function move(e) {
-			console.log('move  = ', name, offsetX, offsetY);
-
 			var snapPoint = gameField.checkOnSnap(that, e.clientX - offsetX, e.clientY - offsetY);
 
 			that.x(snapPoint.x);
@@ -141,12 +229,23 @@ var Shape = Class.$extend({
 			$(document).unbind('mouseup', up);
 			$(document).unbind('mousewheel', mousewheel);
 			var snapPoint = gameField.checkOnSnap(that, e.clientX - offsetX, e.clientY - offsetY);
-			if (snapPoint.overField) {
+			var rulesCompliance = snapPoint.overField ? gameField.checkRulesCompliance(that, snapPoint.blockX, snapPoint.blockY) : false;
+
+			if (rulesCompliance) {
 				gameField.setShape(that, snapPoint.blockX, snapPoint.blockY);
+				that.used = true;
 				that.visible(false);
-				//app.nextPlayer();
+				app.nextPlayer();
 			} else {
 				//to default position
+				var i, j;
+				for (i = 0; i < 5; i++) {
+					for (j = 0; j < 5; j++) {
+						that.data[i][j] = that.defaultData[i][j];
+					}
+				}
+				that.info.data = that.data;
+				that.visualize();
 				that.x(that.info.offX + shapesMarginLeft);
 				that.y(that.info.offY + shapesMarginTop);
 			}
@@ -164,7 +263,7 @@ var Shape = Class.$extend({
 	},
 
 	visible: function (value) {
-		if (value) {
+		if (value && !this.used) {
 			this.visual.css("display", "block");
 		} else {
 			this.visual.css("display", "none");
@@ -192,7 +291,7 @@ var Shape = Class.$extend({
 	//повернуть 1 раз по часовой стрелке
 	turn: function () {
 		var i, j,
-			data = this.info.data,
+			data = this.data,
 			tempData = [];
 
 		//копирование в промежуточный массив
@@ -215,7 +314,7 @@ var Shape = Class.$extend({
 
 	//перевернуть фигуру
 	upend: function () {
-		var data = this.info.data,
+		var data = this.data,
 			tempLine0 = data[0],
 			tempLine1 = data[1];
 		data[0] = data[4];
@@ -231,7 +330,7 @@ var Shape = Class.$extend({
 		var i, j, l,
 			doOffsetV = true,
 			doOffsetH = true,
-			data = this.info.data,
+			data = this.data,
 			offsetV = 0,
 			offsetH = 0;
 
@@ -271,7 +370,7 @@ var Shape = Class.$extend({
 
 	visualize: function () {
 		var htmlView = '',
-			data = this.info.data,
+			data = this.data,
 			blockSize = settings.blockSize;
 
 		this.wLenght = 0;
@@ -282,11 +381,11 @@ var Shape = Class.$extend({
 				if (data[i][j] != 0) {
 					var style = "width:{0}px; height:{0}px; left:{1}px; top:{2}px;".format(blockSize, blockSize * j, blockSize * i);
 					htmlView += '<div class="shape-block ' + this.colorClass + '" style="' + style + '"></div>';
-					if (this.wLenght < j) {
-						this.wLenght = j;
+					if (this.wLenght < j + 1) {
+						this.wLenght = j + 1;
 					}
-					if (this.hLenght < i) {
-						this.hLenght = i;
+					if (this.hLenght < i + 1) {
+						this.hLenght = i + 1;
 					}
 				}
 			}

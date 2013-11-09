@@ -1,3 +1,7 @@
+body {
+    background-color: #F0ECE4;
+}
+
 .game-shape {
     position: absolute;
     -webkit-touch-callout: none;
@@ -19,16 +23,16 @@
     background-color: #D93B3B !important;
 }
 .shape-block-color1 {
-    border: 1px solid #FAF3A7 !important;
-    background-color: #F2DE00 !important;
+    border: 1px solid #DBD17F !important;
+    background-color: #DBC200 !important;
 }
 .shape-block-color2 {
-    border: 1px solid #82E37D !important;
+    border: 1px solid #50C942 !important;
     background-color: #09BD00 !important;
 }
 .shape-block-color3 {
-    border: 1px solid #99A5F2 !important;
-    background-color: #2340FA !important;
+    border: 1px solid #657BDB    !important;
+    background-color: #2146EB !important;
 }
 
 .game-field {
@@ -49,4 +53,22 @@
 
 .highlighted {
 
+}
+
+
+/********************** UI ***********************/
+.player-name {
+    margin-left: 30px;
+    margin-top: 10px;
+    color: #999;
+}
+
+.game-help {
+    margin-left: 400px;
+    margin-top: 635px;
+    color: #aaa;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
 }

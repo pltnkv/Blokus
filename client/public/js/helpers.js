@@ -19,7 +19,6 @@ if (!String.prototype.format) {
 }
 
 
-
 function div(p1, p2) {
 	return (p1 - (p1 % p2)) / p2;
 }
@@ -270,13 +269,19 @@ var shapesStorage = {
 		}
 	],
 
-	cloneItems: function () {
-		var i, l, j, item, newData, newItem, res = [];
+	cloneItems: function (playerId) {
+		var i, l, j, k, item, newData, newItem, res = [];
 		for (i = 0, l = this.items.length; i < l; i++) {
 			item = this.items[i];
 			newData = [];
 			for (j = 0; j < 5; j++) {
 				newData[j] = item.data[j].slice(0);
+				for (k = 0; k < 5; k++) {
+					if (newData[j][k] != 0) {
+						newData[j][k] += 2 * playerId;
+					}
+
+				}
 			}
 			newItem = {};
 			newItem.data = newData;

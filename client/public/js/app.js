@@ -40,7 +40,9 @@ var App = Class.$extend({
 			this.players[this.currentPlayer].hide();
 			this.currentPlayer = this.currentPlayer + 1 == numPlayers ? 0 : this.currentPlayer + 1;
 		}
-		this.players[this.currentPlayer].play();
+		var plr = this.players[this.currentPlayer];
+		plr.play();
+		$('.player-name').text(plr.name + ' player turn');
 	}
 
 });
@@ -55,10 +57,10 @@ var ServerConnector = Class.$extend({
 		var params = {
 			gameType: 1,//offline
 			players: [
-				{id: 0, name: 'Green'},
-				{id: 1, name: 'Blue'},
-				{id: 2, name: 'Yellow'},
-				{id: 3, name: 'Red'}
+				{id: 0, name: 'Red'},
+				{id: 1, name: 'Yellow'},
+				{id: 2, name: 'Green'},
+				{id: 3, name: 'Blue'}
 			]
 		};
 		app.run(params);
@@ -75,13 +77,12 @@ var Player = Class.$extend({
 	},
 
 	createShapes: function () {
-		var shapeInfos = shapesStorage.cloneItems(),
-			colorClass = 'shape-block-color' + this.id;
+		var shapeInfos = shapesStorage.cloneItems(this.id);
 
 		this.shapes = [];
 
 		for (var i = 0, l = shapeInfos.length; i < l; i++) {
-			this.shapes.push(new Shape(shapeInfos[i], colorClass, app.field));
+			this.shapes.push(new Shape(shapeInfos[i], this, app.field));
 		}
 	},
 
@@ -100,18 +101,17 @@ var Player = Class.$extend({
 });
 
 
-
 var app, serverConnector;
 
 $(function () {
 	app = new App();
 	serverConnector = new ServerConnector();
 
-    //temp skip turn
-    $(document).keydown(function(e) {
-        if(e.keyCode == 13) { //enter
-            app.nextPlayer();
-        }
-    });
+	//temp skip turn
+	$(document).keydown(function (e) {
+		if (e.keyCode == 13) { //enter
+			app.nextPlayer();
+		}
+	});
 });
 
