@@ -31,6 +31,11 @@ function init(app) {
         res.render('game', makeParams({qwe:123}));
     });
 
+	app.get('/rules', function (req, res) {
+		log.info("rules");
+		res.render('rules', makeParams());
+	});
+
     app.get('/results', function (req, res) {
         log.info("results");
         res.render('results', makeParams());

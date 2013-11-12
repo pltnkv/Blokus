@@ -35,6 +35,11 @@ var GameField = Class.$extend({
 				this.blocks[i][j] = block;
 			}
 		}
+		this.blocks[0][0].pickAsStartPoint('start-field-block-blue');
+		this.blocks[0][fieldSize - 1].pickAsStartPoint('start-field-block-yellow');
+		this.blocks[fieldSize - 1][fieldSize - 1].pickAsStartPoint('start-field-block-red');
+		this.blocks[fieldSize - 1][0].pickAsStartPoint('start-field-block-green');
+
 
 		//filling empty data with borders
 		for (i = 0; i < fieldSize + 2; i++) {
@@ -46,10 +51,10 @@ var GameField = Class.$extend({
 			}
 		}
 
-		this.data[fieldSize + 1][0] = 2; //red
-		this.data[0][0] = 4; //yellow
-		this.data[0][fieldSize + 1] = 6; //green
-		this.data[fieldSize + 1][fieldSize + 1] = 8; //blue
+		this.data[0][0] = 2;
+		this.data[0][fieldSize + 1] = 4;
+		this.data[fieldSize + 1][fieldSize + 1] = 6;
+		this.data[fieldSize + 1][0] = 8;
 	},
 
 
@@ -157,6 +162,11 @@ var GameFieldBlock = Class.$extend({
 	},
 
 	setColorClass: function (className) {
+		this.visual.addClass(className);
+	},
+
+	pickAsStartPoint: function (className) {
+		this.visual.removeClass('field-block');
 		this.visual.addClass(className);
 	}
 });

@@ -13,6 +13,12 @@
     });
 </script>
 
+<script type="text/javascript" src="//yandex.st/share/share.js" charset="utf-8"></script>
+<script type="text/javascript" src="//vk.com/js/api/openapi.js?101"></script>
+<script type="text/javascript">
+    VK.init({apiId: 3991150, onlyWidgets: true});
+</script>
+
 <style>
     body {
         padding-top: 70px;
@@ -22,31 +28,57 @@
 
 
 {% block content %}
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/ru_RU/all.js#xfbml=1&appId=260032797483677";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
 <div class="container">
 
     <div class="jumbotron">
-        <h1>Blokus <small>[In developing]</small></h1>
+        <h1>Blokus <small>version 0.1</small></h1>
+        <a href="/game"><button type="button" class="btn-play btn btn-primary btn-lg">Начать игру</button></a>
         <br />
-        <p><b>Blokus online — онлайн версия</b> популярной стратегической настольной игры для двух, трех или четырех человек, изобретенной французским математиком Бернардом Тавитианом.<br>
+        <p><b>Blokus(блокус) online</b> — онлайн версия популярной стратегической настольной игры для двух, трех или четырех человек, изобретенной французским математиком Бернардом Тавитианом.<br>
             Существуют несколько видов блокуса: классический блокус(Blokus Classic), блокус для двоих (Blokus Duo или Blokus Travel), треугольный блокус (Blokus Trigon) и трехмерный (Blokus 3D).
-            <br />
-            Запуск в октябре 2013 года.
-            <br />
-            За подробностями пишите на: <a class='email' href=''></a>
+            <br /><br />
+            На данный момент реализован вариант игры за одним компъютером на четверых. Но вы запросто можете сыграть вдвоем играя за двух игроков по очереди.
+            Планируется развить сайт как площадку для онлайн-игры в блокус, а так же создать версию для мобилых устройств (iPhone, iPad и android). Все отзывы и предложения пишите на: <a class='email' href=''></a>, для меня это очень важно.
         </p>
-        <br />
-        <p>
-            <b>Blokus online — is online version</b> of an abstract strategy board game for two to four players.
-            <br />
-            Start in oct 2013.
-            <br />
-            Contacts: <a class='email' href=''></a>
-        </p>
-        <p>
-            <!--<a class="btn btn-lg btn-primary" href="../../components/#navbar">Send request</a>-->
-        </p>
+        <br>
+        <h3>Планируется в ближайшее время:</h3>
+        <ul>
+            <li><s>Классическая игра (на 4-х) за одним комъютером (12.11.2013)</s></li>
+            <li>Автоматическая провека оставшихся ходов</li>
+            <li>Подсчет очков игроков</li>
+            <li>Возможность играть по сети (поделиться игрой через ссылку)</li>
+            <li>Возможность играть с ботами</li>
+            <li>Игра для 2-х человек (Поле квадрат 14 на 14)</li>
+            <li>Интеграция с Facebook</li>
+            <li>Интеграция с Vkontakte</li>
+            <li>Интеграция с Chrome store</li>
+        </ul>
+        <h3>Чуть позже:)</h3>
+        <ul>
+            <li>Поиск свободных игр с другими игроками</li>
+            <li>Мобильная версия под iPad и iPhone</li>
+            <li>Мобильная версия под Android</li>
+            <li>Рейтинг игроков</li>
+            <li>Персональная статистика по играм</li>
+        </ul>
 
+
+        <div class="share-link yashare-auto-init" data-yashareL10n="ru" data-yashareType="link" data-yashareQuickServices="vkontakte,facebook,twitter,gplus"></div>
+
+        <div id="vk_like" style="margin-top: 4px; margin-bottom: 5px;"></div>
+        <script type="text/javascript">
+            VK.Widgets.Like("vk_like", {type: "button"});
+        </script>
+        <div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-width="600" data-layout="standard" data-action="like" data-show-faces="true" data-share="false"></div>
     </div>
 
 </div>

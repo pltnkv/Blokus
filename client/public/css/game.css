@@ -18,22 +18,27 @@ body {
 
 }
 
+
+
 .shape-block-color0 {
-    border: 1px solid #D25B5E !important;
-    background-color: #D93B3B !important;
-}
-.shape-block-color1 {
-    border: 1px solid #DBD17F !important;
-    background-color: #DBC200 !important;
-}
-.shape-block-color2 {
-    border: 1px solid #50C942 !important;
-    background-color: #09BD00 !important;
-}
-.shape-block-color3 {
     border: 1px solid #657BDB    !important;
     background-color: #2146EB !important;
 }
+
+.shape-block-color1 {
+    border: 1px solid #C9C773 !important;
+    background-color: #E3DC1B !important;
+}
+.shape-block-color2 {
+    border: 1px solid #D25B5E !important;
+    background-color: #D93B3B !important;
+}
+.shape-block-color3 {
+    border: 1px solid #50C942 !important;
+    background-color: #09BD00 !important;
+}
+
+
 
 .game-field {
     position: absolute;
@@ -49,6 +54,27 @@ body {
     position: absolute;
     border: 1px solid #666;
     background-color: #CCC;
+}
+
+.start-field-block-green {
+    position: absolute;
+    border: 1px solid #666;
+    background-color: #85FF9D;
+}
+.start-field-block-red {
+    position: absolute;
+    border: 1px solid #666;
+    background-color: #FF8585;
+}
+.start-field-block-blue {
+    position: absolute;
+    border: 1px solid #666;
+    background-color: #85A9FF;
+}
+.start-field-block-yellow {
+    position: absolute;
+    border: 1px solid #666;
+    background-color: #FFFD85;
 }
 
 .highlighted {

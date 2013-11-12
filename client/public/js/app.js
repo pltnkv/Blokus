@@ -57,10 +57,10 @@ var ServerConnector = Class.$extend({
 		var params = {
 			gameType: 1,//offline
 			players: [
-				{id: 0, name: 'Red'},
+				{id: 0, name: 'Blue'},
 				{id: 1, name: 'Yellow'},
-				{id: 2, name: 'Green'},
-				{id: 3, name: 'Blue'}
+				{id: 2, name: 'Red'},
+				{id: 3, name: 'Green'}
 			]
 		};
 		app.run(params);
