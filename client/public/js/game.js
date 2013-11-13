@@ -6,55 +6,62 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var fieldSize = 20,
-	fieldLeft = 400,
-	fieldTop = 50,
-	fieldRight = fieldSize * settings.blockSize + fieldLeft,
-	fieldBottom = fieldSize * settings.blockSize + fieldTop;
+
 
 var GameField = Class.$extend({
 
-	__init__: function () {
+	__init__: function (gameType) {
 		this.blocks = [];
 		this.data = [];
 
+		this.fieldLeft = 400;
+		this.fieldTop = 50;
+
 		this.visual = $('<div class="game-field"></div>');
-		this.visual.css('left', fieldLeft).css('top', fieldTop);
+		this.visual.css('left', this.fieldLeft).css('top', this.fieldTop);
 		this.visual.appendTo("body");
 
-		//filling visual blocks
+
+		this.configureGameField(gameType);
+	},
+
+	configureGameField: function (gameType) {
+		//game
+
+
+		this.fieldSize = gameType == 1 ? 20 : 14;
+		this.fieldRight = this.fieldSize * settings.blockSize + this.fieldLeft;
+		this.fieldBottom = this.fieldSize * settings.blockSize + this.fieldTop;
+
+
+		//filling visuals and data
 		var i, j, block;
-		for (i = 0; i < fieldSize; i++) {
+		for (i = 0; i < this.fieldSize; i++) {
 			if (this.blocks[i] == undefined) {
 				this.blocks[i] = [];
+				this.data[i] = [];
 			}
-			for (j = 0; j < fieldSize; j++) {
+			for (j = 0; j < this.fieldSize; j++) {
 				block = new GameFieldBlock(j, i);
 				block.visual.appendTo(this.visual);
 
 				this.blocks[i][j] = block;
-			}
-		}
-		this.blocks[0][0].pickAsStartPoint('start-field-block-blue');
-		this.blocks[0][fieldSize - 1].pickAsStartPoint('start-field-block-yellow');
-		this.blocks[fieldSize - 1][fieldSize - 1].pickAsStartPoint('start-field-block-red');
-		this.blocks[fieldSize - 1][0].pickAsStartPoint('start-field-block-green');
-
-
-		//filling empty data with borders
-		for (i = 0; i < fieldSize + 2; i++) {
-			if (this.data[i] == undefined) {
-				this.data[i] = [];
-			}
-			for (j = 0; j < fieldSize + 2; j++) {
 				this.data[i][j] = 0;
 			}
 		}
 
-		this.data[0][0] = 2;
-		this.data[0][fieldSize + 1] = 4;
-		this.data[fieldSize + 1][fieldSize + 1] = 6;
-		this.data[fieldSize + 1][0] = 8;
+
+		if (gameType == 1) {
+			this.blocks[0][0].pickAsStartPoint('start-field-block-blue', 0);
+			this.blocks[0][this.fieldSize - 1].pickAsStartPoint('start-field-block-yellow', 1);
+			this.blocks[this.fieldSize - 1][this.fieldSize - 1].pickAsStartPoint('start-field-block-red', 2);
+			this.blocks[this.fieldSize - 1][0].pickAsStartPoint('start-field-block-green', 3);
+		} else if (gameType == 2) {
+			this.blocks[4][4].pickAsStartPoint('start-field-block-purple', 0);
+			this.blocks[this.fieldSize - 5][this.fieldSize - 5].pickAsStartPoint('start-field-block-orange', 1);
+		} else {
+			console.log('gameType is wrong', gameType);
+		}
 	},
 
 
@@ -62,16 +69,16 @@ var GameField = Class.$extend({
 		var snapPoint = {'x': posX, 'y': posY, overField: false},
 			blockX, blockY;
 
-		if (posX > fieldLeft && posX < fieldRight && posY > fieldTop && posY < fieldBottom) {
-			blockX = div(posX - fieldLeft, settings.blockSize)
-			blockY = div(posY - fieldTop, settings.blockSize);
+		if (posX > this.fieldLeft && posX < this.fieldRight && posY > this.fieldTop && posY < this.fieldBottom) {
+			blockX = div(posX - this.fieldLeft, settings.blockSize)
+			blockY = div(posY - this.fieldTop, settings.blockSize);
 			//использовать привязку, если фигура вписывается в поле
-			if (fieldSize - shape.wLenght - blockX >= 0 && fieldSize - shape.hLenght - blockY >= 0) {
-				snapPoint.x = fieldLeft + blockX * settings.blockSize;
-				snapPoint.y = fieldTop + blockY * settings.blockSize;
+			if (this.fieldSize - shape.wLenght - blockX >= 0 && this.fieldSize - shape.hLenght - blockY >= 0) {
+				snapPoint.x = this.fieldLeft + blockX * settings.blockSize;
+				snapPoint.y = this.fieldTop + blockY * settings.blockSize;
 				snapPoint.overField = true;
-				snapPoint.blockX = blockX + 1;//учитываем хак с инициирующими границами
-				snapPoint.blockY = blockY + 1;
+				snapPoint.blockX = blockX;
+				snapPoint.blockY = blockY;
 			}
 		}
 		return snapPoint;
@@ -81,11 +88,32 @@ var GameField = Class.$extend({
 	checkRulesCompliance: function (shape, blockX, blockY) {
 		console.log('checkRulesCompliance', blockX, blockY);
 		var res = false;
-		if (this.checkNoIntersections(shape, blockX, blockY) &&
-			this.checkFriendlyContact(shape, blockX, blockY)) {
-			res = true;
+		if (shape.player.isFirstStep) {
+			if (this.checkNoIntersections(shape, blockX, blockY) &&
+				this.checkFirstShape(shape, blockX, blockY)) {
+				res = true;
+			}
+		} else {
+			if (this.checkNoIntersections(shape, blockX, blockY) &&
+				this.checkFriendlyContact(shape, blockX, blockY)) {
+				res = true;
+			}
 		}
+
 		return res;
+	},
+
+
+	checkFirstShape: function (shape, blockX, blockY) {
+		var i, j, iLen, jLen, shapeData = shape.data;
+		for (i = 0, iLen = shape.hLenght; i < iLen; i++) {
+			for (j = 0, jLen = shape.wLenght; j < jLen; j++) {
+				if (this.blocks[blockY + i][blockX + j].isStartPoint(shape.player.id) && shapeData[i][j] != 0) {
+					return true;
+				}
+			}
+		}
+		return false;
 	},
 
 	checkNoIntersections: function (shape, blockX, blockY) {
@@ -105,36 +133,43 @@ var GameField = Class.$extend({
 		var angleContactExist = false;
 		var contactNumber = shape.contactNumber;
 
-		console.log(this.data);
-
 		for (i = 0, iLen = shape.hLenght; i < iLen; i++) {
 			for (j = 0, jLen = shape.wLenght; j < jLen; j++) {
 				//проверка угловых контактов
 				var posx = blockX + j,
 					posy = blockY + i;
 				if (!angleContactExist && shapeData[i][j] == contactNumber) {
-					if (this.data[posy + 1][posx + 1] == contactNumber ||
-						this.data[posy + 1][posx - 1] == contactNumber ||
-						this.data[posy - 1][posx + 1] == contactNumber ||
-						this.data[posy - 1][posx - 1] == contactNumber) {
+					if (this.isEqual(posy + 1, posx + 1, contactNumber) ||
+						this.isEqual(posy + 1, posx - 1, contactNumber) ||
+						this.isEqual(posy - 1, posx + 1, contactNumber) ||
+						this.isEqual(posy - 1, posx - 1, contactNumber)) {
 						angleContactExist = true;
 					}
 				}
 
+
 				//проверка прямых контактов
 				if (shapeData[i][j] == contactNumber || shapeData[i][j] == contactNumber - 1) {
-					if (this.data[posy][posx + 1] == contactNumber || this.data[posy][posx + 1] == contactNumber - 1 ||
-						this.data[posy][posx - 1] == contactNumber || this.data[posy][posx - 1] == contactNumber - 1 ||
-						this.data[posy + 1][posx] == contactNumber || this.data[posy + 1][posx] == contactNumber - 1 ||
-						this.data[posy - 1][posx] == contactNumber || this.data[posy - 1][posx] == contactNumber - 1) {
+					if (this.isEqual(posy, posx + 1, contactNumber) || this.isEqual(posy, posx + 1, contactNumber - 1) ||
+						this.isEqual(posy, posx - 1, contactNumber) || this.isEqual(posy, posx - 1, contactNumber - 1) ||
+						this.isEqual(posy + 1, posx, contactNumber) || this.isEqual(posy + 1, posx, contactNumber - 1) ||
+						this.isEqual(posy - 1, posx, contactNumber) || this.isEqual(posy - 1, posx, contactNumber - 1)) {
 						return false;
 					}
 				}
 			}
 		}
+
 		return angleContactExist;
 	},
 
+	isEqual: function (y, x, value) {
+		if (this.data[y] != undefined) {
+			return this.data[y][x] == value;
+		} else {
+			return false;
+		}
+	},
 
 	setShape: function (shape, blockX, blockY) {
 		//filling
@@ -144,7 +179,7 @@ var GameField = Class.$extend({
 		for (i = 0, iLen = shape.hLenght; i < iLen; i++) {
 			for (j = 0, jLen = shape.wLenght; j < jLen; j++) {
 				if (shapeData[i][j] != 0) {
-					this.blocks[blockY + i - 1][blockX + j - 1].setColorClass(shape.colorClass);
+					this.blocks[blockY + i][blockX + j].setColorClass(shape.colorClass);
 					this.data[blockY + i][blockX + j] = shapeData[i][j];
 				}
 			}
@@ -159,15 +194,21 @@ var GameFieldBlock = Class.$extend({
 		var style = "width:{0}px; height:{0}px; left:{1}px; top:{2}px;".format(settings.blockSize, settings.blockSize * posX, settings.blockSize * posY);
 		var htmlView = '<div class="field-block" style="' + style + '"></div>';
 		this.visual = $(htmlView);
+		this.playerIdStartPoint = -1;
 	},
 
 	setColorClass: function (className) {
 		this.visual.addClass(className);
 	},
 
-	pickAsStartPoint: function (className) {
+	pickAsStartPoint: function (className, playerId) {
 		this.visual.removeClass('field-block');
 		this.visual.addClass(className);
+		this.playerIdStartPoint = playerId;
+	},
+
+	isStartPoint: function (playerId) {
+		return this.playerIdStartPoint == playerId;
 	}
 });
 
@@ -183,10 +224,11 @@ var Shape = Class.$extend({
 		var that = this;
 		var offsetX, offsetY;
 
+		this.player = player;
 		this.used = false;
 		this.info = info;
 		this.data = info.data;
-		this.colorClass = 'shape-block-color' + player.id;
+		this.colorClass = player.colorClass;
 		this.contactNumber = 2 + player.id * 2;
 
 		this.visual = $('<div class="game-shape"></div>');
@@ -243,6 +285,7 @@ var Shape = Class.$extend({
 
 			if (rulesCompliance) {
 				gameField.setShape(that, snapPoint.blockX, snapPoint.blockY);
+				that.player.isFirstStep = false;
 				that.used = true;
 				that.visible(false);
 				app.nextPlayer();

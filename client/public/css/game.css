@@ -38,6 +38,17 @@ body {
     background-color: #09BD00 !important;
 }
 
+.shape-block-color4 {
+    position: absolute;
+    border: 1px solid #C989E0 !important;
+    background-color: #BD42ED !important;
+}
+.shape-block-color5 {
+    position: absolute;
+    border: 1px solid #E0BF89 !important;
+    background-color: #EDAC42 !important;
+}
+
 
 
 .game-field {
@@ -76,6 +87,18 @@ body {
     border: 1px solid #666;
     background-color: #FFFD85;
 }
+
+.start-field-block-purple {
+    position: absolute;
+    border: 1px solid #666;
+    background-color: #D09AE3;
+}
+.start-field-block-orange {
+    position: absolute;
+    border: 1px solid #666;
+    background-color: #E3C59A;
+}
+
 
 .highlighted {
 
