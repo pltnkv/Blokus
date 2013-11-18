@@ -15,7 +15,8 @@ var express = require('express')
     , log = require('logger')(module)
     , swig = require('swig')
     , config = require('../config.json')
-    , routes = require('./routes.js');
+    , routes = require('./routes.js')
+	, mongoose = require('./mongoose.js');
 
 
 // assign the swig engine to .html files
@@ -28,6 +29,7 @@ app.set('views', __dirname + '/../client/views');
 app.set('view cache', false);
 
 app.use(express.static(__dirname + '/../client/public'));
+app.use(express.bodyParser());
 
 log.info('debug = '  +app.get('debug'));
 

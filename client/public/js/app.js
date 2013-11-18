@@ -51,24 +51,28 @@ var App = Class.$extend({
 
 var ServerConnector = Class.$extend({
 	__init__: function () {
-		var paramsOffline4 = {
-			gameType: 1,//offline
-			players: [
-				{id: 0, name: 'Blue'},
-				{id: 1, name: 'Yellow'},
-				{id: 2, name: 'Red'},
-				{id: 3, name: 'Green'}
-			]
-		};
-		var paramsOffline2 = {
-			gameType: 2,
-			players: [
-				{id: 0, name: 'Purple'},
-				{id: 1, name: 'Orange'},
-			]
-		};
+		var paramsOffline;
+		if (globalSettings.numPlayers == 4) {
+			paramsOffline = {
+				gameType: 1,//offline
+				players: [
+					{id: 0, name: 'Blue'},
+					{id: 1, name: 'Yellow'},
+					{id: 2, name: 'Red'},
+					{id: 3, name: 'Green'}
+				]
+			};
+		} else {
+			paramsOffline = {
+				gameType: 2,
+				players: [
+					{id: 0, name: 'Purple'},
+					{id: 1, name: 'Orange'},
+				]
+			};
+		}
 
-		this.connected(paramsOffline4);
+		this.connected(paramsOffline);
 	},
 
 	connected: function (params) {
@@ -90,7 +94,7 @@ var Player = Class.$extend({
 		var shapeInfos = shapesStorage.cloneItems(this.id);
 
 		this.shapes = [];
-		this.colorClass= 'shape-block-color' + (this.id + (app.gameType == 1 ? 0 : 4));
+		this.colorClass = 'shape-block-color' + (this.id + (app.gameType == 1 ? 0 : 4));
 
 
 		for (var i = 0, l = shapeInfos.length; i < l; i++) {
