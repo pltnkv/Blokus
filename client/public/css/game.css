@@ -99,10 +99,24 @@ body {
     background-color: #E3C59A;
 }
 
-
-.highlighted {
-
+.triangle-up {
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 0 15px 30px 15px;
+    border-color: transparent transparent #0a80dd transparent;
 }
+
+.triangle-down {
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 30px 15px 0 15px;
+    border-color: #0a80ff transparent transparent transparent;
+}
+
 
 
 /********************** UI ***********************/

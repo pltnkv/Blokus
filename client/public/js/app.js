@@ -52,24 +52,37 @@ var App = Class.$extend({
 var ServerConnector = Class.$extend({
 	__init__: function () {
 		var paramsOffline;
-		if (globalSettings.numPlayers == 4) {
-			paramsOffline = {
-				gameType: 1,//offline
-				players: [
-					{id: 0, name: 'Blue'},
-					{id: 1, name: 'Yellow'},
-					{id: 2, name: 'Red'},
-					{id: 3, name: 'Green'}
-				]
-			};
-		} else {
-			paramsOffline = {
-				gameType: 2,
-				players: [
-					{id: 0, name: 'Purple'},
-					{id: 1, name: 'Orange'},
-				]
-			};
+		switch (globalSettings.numPlayers) {
+			case 4:
+				paramsOffline = {
+					gameType: 1,//offline
+					players: [
+						{id: 0, name: 'Blue'},
+						{id: 1, name: 'Yellow'},
+						{id: 2, name: 'Red'},
+						{id: 3, name: 'Green'}
+					]
+				};
+				break;
+			case 3:
+				paramsOffline = {
+					gameType: 3,
+					players: [
+						{id: 0, name: 'Purple'},
+						{id: 1, name: 'Orange'},
+						{id: 2, name: 'Orange2'},
+					]
+				};
+				break;
+			case 2:
+				paramsOffline = {
+					gameType: 2,
+					players: [
+						{id: 0, name: 'Purple'},
+						{id: 1, name: 'Orange'},
+					]
+				};
+				break;
 		}
 
 		this.connected(paramsOffline);

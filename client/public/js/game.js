@@ -22,10 +22,42 @@ var GameField = Class.$extend({
 		this.visual.appendTo("body");
 
 
-		this.configureGameField(gameType);
+		this.configureTrigonGameField(gameType);
 	},
 
-	configureGameField: function (gameType) {
+
+	configureTrigonGameField: function (gameType) {
+		this.fieldSize = 18;
+		this.fieldRight = this.fieldSize * settings.blockSize + this.fieldLeft;
+		this.fieldBottom = this.fieldSize * settings.blockSize + this.fieldTop;
+
+
+		//filling visuals and data
+		var i, j, block;
+		for (i = 0; i < this.fieldSize; i++) {
+			if (this.blocks[i] == undefined) {
+				this.blocks[i] = [];
+				this.data[i] = [];
+			}
+
+			var xIndent = this.getXBy1Y(i);
+			var xLen = 35 - xIndent * 2;
+
+			for (j = 0; j < xLen; j++) {
+				block = new FieldBlock(xIndent + j, i, true);
+				block.visual.appendTo(this.visual);
+
+				this.blocks[i][xIndent + j] = block;
+				this.data[i][xIndent + j] = 0;
+			}
+		}
+	},
+
+	getXBy1Y: function (x) {
+		return x <= 8 ? 8 - x : x - 9;
+	},
+
+	configureSquareGameField: function (gameType) {
 		//game
 
 
@@ -42,7 +74,7 @@ var GameField = Class.$extend({
 				this.data[i] = [];
 			}
 			for (j = 0; j < this.fieldSize; j++) {
-				block = new GameFieldBlock(j, i);
+				block = new FieldBlock(j, i, false);
 				block.visual.appendTo(this.visual);
 
 				this.blocks[i][j] = block;
@@ -189,13 +221,24 @@ var GameField = Class.$extend({
 });
 
 
-var GameFieldBlock = Class.$extend({
-	__init__: function (posX, posY) {
-		var style = "width:{0}px; height:{0}px; left:{1}px; top:{2}px;".format(settings.blockSize, settings.blockSize * posX, settings.blockSize * posY);
-		var htmlView = '<div class="field-block" style="' + style + '"></div>';
+var FieldBlock = Class.$extend({
+	__init__: function (posX, posY, triangle) {
+		var htmlView, style;
+
+		if (triangle) {
+			var className = (posX + posY) % 2 == 0 ? 'triangle-up' : 'triangle-down';
+
+			style = "width:{0}px; height:{0}px; left:{1}px; top:{2}px;".format(settings.blockSize, settings.blockSize / 2 * posX, settings.blockSize * posY);
+			htmlView = '<div class="' + className + '" style="' + style + '"></div>';
+		} else {
+			style = "width:{0}px; height:{0}px; left:{1}px; top:{2}px;".format(settings.blockSize, settings.blockSize * posX, settings.blockSize * posY);
+			htmlView = '<div class="field-block" style="' + style + '"></div>';
+		}
+
 		this.visual = $(htmlView);
 		this.playerIdStartPoint = -1;
 	},
+
 
 	setColorClass: function (className) {
 		this.visual.addClass(className);
