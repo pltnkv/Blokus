@@ -31,7 +31,9 @@ function init(app) {
 		res.render('game', makeParams({numPlayers: numPlayers}));
 	});
 	app.get('/game', function (req, res) {
-		res.render('game', makeParams({numPlayers: 4}));
+		var numPlayers = parseInt(req.param('t'));
+		log.info(numPlayers);
+		res.render('game', makeParams({numPlayers: numPlayers}));
 	});
 
 

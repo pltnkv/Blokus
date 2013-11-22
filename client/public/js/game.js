@@ -22,7 +22,7 @@ var GameField = Class.$extend({
 		this.visual.appendTo("body");
 
 
-		this.configureTrigonGameField(gameType);
+		this.configureSquareGameField(gameType);
 	},
 
 
