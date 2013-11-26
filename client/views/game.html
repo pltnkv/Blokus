@@ -31,12 +31,21 @@
 
 
 {% block content %}
-<div class="player-name"></div>
-<div class="game-help">
-    <p>Press 'Enter' to skip player turn<br>
-        Use mouse wheel for turn shape<br>
-        <a href="/rules" target="_blank">Правила</a>, <a class='email' href=''>Оставить отзыв</a>
-    <p>
+<div class="hidden">gameId = {{ gameInfo.gameId }}</div>
+<div class="hidden">gameId = {{ gameInfo.gameId }}</div>
+
+<div class="navbar navbar-default">
+    <ul class="nav navbar-nav navbar-left">
+        <li><p class="navbar-text">Ходит: Олег</p></li>
+        <li><p class="navbar-text">Счет: 30</p></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+        <li><p class="navbar-text">Подсказка: Используйте колесико для поворота фигуры</p></li>
+        <li><a href="/rules" target="_blank">Правила</a></li>
+        <li><a class='email' href=''>Оставить отзыв</a></li>
+    </ul>
 </div>
+<div class="player-name"></div>
 {% endblock %}
+
 

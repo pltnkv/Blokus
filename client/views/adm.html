@@ -1,0 +1,10 @@
+{% extends 'adm_base.html' %}
+
+
+{% block content %}
+<ul>
+    {% for game in games %}
+    <li>{{ loop.index }} - {{ game.title }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

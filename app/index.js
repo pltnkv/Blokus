@@ -15,8 +15,7 @@ var express = require('express')
     , log = require('logger')(module)
     , swig = require('swig')
     , config = require('../config.json')
-    , routes = require('./routes.js')
-	, mongoose = require('./mongoose.js');
+    , routes = require('./routes.js');
 
 
 // assign the swig engine to .html files

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<script>
+    $(function () {
+        var email = 'pltnkv' + '0@gmail';
+        $('.email').attr('href', 'mailto:' + email);
+    });
+</script>
+
+<div class="container">
+    <div class="alert alert-danger">
+        Что-то пошло не так, <a href="/newgame" class="alert-link">попробуйте еще раз</a>.<br>
+        Или <a class='email alert-link' href=''>оставьте негативный отзыв</a> с указанием версий вашего браузера и
+        операционной системы :)
+    </div>
+</div>
+{% endblock %}
+
+
