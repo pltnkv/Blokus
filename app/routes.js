@@ -6,12 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 var log = require('logger')(module)
-    , core = require('core')
-    , mongoouse = require('./game/mongoose.js');
-
-var game = core.gamesManager.createGame('qwe');
-log.info('core');
-log.info('game =  ' + game.getTitle());
+    ,gamesController = require('./game/gamescontroller.js');
 
 function init(app) {
 
@@ -38,9 +33,9 @@ function init(app) {
     app.post('/game', function (req, res) {
         var fieldType = parseInt(req.param('fieldType'));
         var isOnlineGame = !!req.param('onlineGame');
-        pageProcessor.createGame(fieldType, isOnlineGame, function (gameInfo) {
-            if (gameInfo.error) {
-                res.render('game_error', makeParams());
+        pageProcessor.createGame(fieldType, isOnlineGame, function (err, gameInfo) {
+            if (err) {
+                res.render('game_error', makeParams({error:err}));
             } else {
                 res.render('game', makeParams({gameInfo: gameInfo}));
             }
@@ -52,8 +47,15 @@ function init(app) {
         res.render('game', makeParams({numPlayers: numPlayers}));
     });
 
-    app.get('/joingame', function (req, res) {
-        res.render('joingame', makeParams({}));
+    app.get('/join', function (req, res) {
+        var gameId = req.param('id');
+        gamesController.instance.joinToGame(gameId, function(err, gameInfo){
+            if (err) {
+                res.render('game_error', makeParams({error:err}));
+            } else {
+                res.render('joingame', makeParams({gameInfo: gameInfo}));
+            }
+        });
     });
 
 
@@ -99,38 +101,11 @@ function init(app) {
 
 var pageProcessor = {
     adm: function () {
-        var games = [
-            {title: "t1"},
-            {title: "t2"}
-        ];
-        return games;
+        return gamesController.instance.getGamesStat();
     },
 
     createGame: function (filedType, isOnlineGame, callback) {
-        var res, game, gameData = {
-            fieldType: filedType,
-            minutesPerSide: 15,
-            onlineMode: isOnlineGame,
-            players: [
-                {name: "orange", score: 0},
-                {name: "red", score: 0},
-                {name: "red3", score: 10},
-                {name: "red4", score: 0}
-            ]
-        };
-
-        game = new mongoouse.GameModel(gameData);
-
-
-        game.save(function (err) {
-            if (err) {
-                log.error(err);
-                res = {error: true}
-            } else {
-                res = {gameId: game._id};
-            }
-            callback(res);
-        });
+        gamesController.instance.createGame(filedType, isOnlineGame, callback);
     }
 };
 

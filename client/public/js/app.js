@@ -133,7 +133,7 @@ var Player = Class.$extend({
 var app, serverConnector;
 
 $(function () {
-	app = new App();
+	/*app = new App();
 	serverConnector = new ServerConnector();
 
 	//temp skip turn
@@ -141,6 +141,6 @@ $(function () {
 		if (e.keyCode == 13) { //enter
 			app.nextPlayer();
 		}
-	});
+	});*/
 });
 

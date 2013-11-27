@@ -85,5 +85,41 @@
 <noscript><div><img src="//mc.yandex.ru/watch/23110189" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
 {% endif %}
+
+
+{% block feedback %}
+<!-- LoopTodo Feedback Form Code -->
+<script id="looptodo_loop_embed_code" type="text/javascript" src="http://my.loopto.do/form/js/loop-embed-code.js?loopKey=agtzfmxvb3BhYmFja3INCxIETG9vcBiC0aUQDA&domain=my.loopto.do">
+</script>
+<script type="text/javascript">
+    $(function(){
+        looptodo_feedback_btn_init({
+            tabs: [
+                {
+                    label: "Предложения",
+                    desc: "Пишите не задумываясь, мы только рады свежим идеям!",
+                    buttonText: "Отправить",
+                    tag: "suggestion"
+                },
+                {
+                    label: "Проблемы",
+                    desc: "Если вы столкнулись с ошибкой, пожалуйста укажите версию браузера и ОС",
+                    buttonText: "Сообщить об ошибке",
+                    tag: "problem"
+                },
+                {
+                    label: "Вопросы",
+                    desc: "Что-то непонятно? Спрашивайте! :)",
+                    buttonText: "Задать вопрос",
+                    tag: "question"
+                }
+
+            ],
+            message: "Взгляд со стороны - самое важное! Поделитесь впечатлением, чтобы BYRG стал лучше. Спасибо!"
+        });
+    });
+</script>
+<!-- End LoopTodo Feedback Form Code -->
+{% endblock %}
 </body>
 </html>
