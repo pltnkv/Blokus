@@ -63,7 +63,7 @@ var GameModel = mongoose.model('Game', Game);
     }
 });*/
 
-GameModel.findOne({}, function (err, doc) {
+/*GameModel.findOne({}, function (err, doc) {
     if (err) {
         log.error(err);
     }
@@ -82,7 +82,7 @@ GameModel.findOne({}, function (err, doc) {
         var doc = docs[i];
         log.info(doc)
     }*/
-});
+//});
 
 /* ArticleModel.remove({ title: 'ARRRGH' }, function (err) {
  if (err) {

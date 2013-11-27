@@ -33,13 +33,13 @@ function init(app) {
     app.post('/game', function (req, res) {
         var fieldType = parseInt(req.param('fieldType'));
         var isOnlineGame = !!req.param('onlineGame');
-        pageProcessor.createGame(fieldType, isOnlineGame, function (err, gameInfo) {
-            if (err) {
-                res.render('game_error', makeParams({error:err}));
-            } else {
-                res.render('game', makeParams({gameInfo: gameInfo}));
-            }
-        });
+	    gamesController.instance.createGame(fieldType, isOnlineGame, function (err, gameInfo) {
+		    if (err) {
+			    res.render('game_error', makeParams({error:err}));
+		    } else {
+			    res.render('game', makeParams({gameInfo: gameInfo}));
+		    }
+	    });
     });
     app.get('/game', function (req, res) {
         var numPlayers = parseInt(req.param('t'));
@@ -103,10 +103,6 @@ var pageProcessor = {
     adm: function () {
         return gamesController.instance.getGamesStat();
     },
-
-    createGame: function (filedType, isOnlineGame, callback) {
-        gamesController.instance.createGame(filedType, isOnlineGame, callback);
-    }
 };
 
 

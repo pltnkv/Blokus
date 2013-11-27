@@ -6,48 +6,59 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var log = require('logger')(module);
+var log = require('logger')(module)
+	, goModule = require('./gameobject.js');
 
+var GameObject = goModule.GameObject;
+var allGames = [];
 
 var gamesController = {
-    createGame: function (filedType, isOnlineGame, callback) {
-        var res, game, gameData = {
-            fieldType: filedType,
-            minutesPerSide: 15,
-            onlineMode: isOnlineGame,
-            players: [
-                {name: "orange", score: 0},
-                {name: "red", score: 0},
-                {name: "red3", score: 10},
-                {name: "red4", score: 0}
-            ]
-        };
 
-        game = new mongoouse.GameModel(gameData);
+	createGame: function (fieldType, isOnlineGame, callback) {
+		var newGameObject = new GameObject();
 
+		newGameObject.configure(fieldType, isOnlineGame, function (err) {
+			var gameData;
+			if (!err) {
+				var playerHash = newGameObject.getFreePlayerHash();
+				if (playerHash) {
+					log.info(newGameObject.objectId);
+					gameData = {
+						gameId: newGameObject.objectId,
+						playerHash: playerHash
+					};
+				} else {
+					err = "game have not free players";
+				}
+			}
+			callback(err, gameData);
+		});
+		allGames.push(newGameObject);
 
-        game.save(function (err) {
-            if (err) {
-                log.error(err);
-                res = {error: true}
-            } else {
-                res = {gameId: game._id};
-            }
-            callback(res);
-        });
-    },
+	},
 
-    joinToGame: function (gameId, callback) {
+	joinToGame: function (gameId, callback) {
+		var i, gameObject;
+		for (i = 0; i < allGames.length; i++) {
+			gameObject = allGames[i];
+			if (gameObject.getObjectId() == gameId) {
+				//gameObject.
+				break;
+			}
+		}
 
-    },
+		if (i == allGames.length) {
+			callback('No game found');
+		}
+	},
 
-    getGamesStat: function () {
-        var games = [
-            {title: "t1"},
-            {title: "t2"}
-        ];
-        return games;
-    }
+	getGamesStat: function () {
+		var games = [
+			{title: "t1"},
+			{title: "t2"}
+		];
+		return games;
+	}
 };
 
 

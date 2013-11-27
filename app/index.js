@@ -8,6 +8,7 @@
 
 
 var express = require('express')
+	, Class = require('./classy.js')
     , app = express()
     , http = require('http')
     , server = http.createServer(app)
@@ -16,7 +17,6 @@ var express = require('express')
     , swig = require('swig')
     , config = require('../config.json')
     , routes = require('./routes.js');
-
 
 // assign the swig engine to .html files
 app.engine('html', swig.renderFile);
