@@ -89,10 +89,10 @@
 
 {% block feedback %}
 <!-- LoopTodo Feedback Form Code -->
-<script id="looptodo_loop_embed_code" type="text/javascript" src="http://my.loopto.do/form/js/loop-embed-code.js?loopKey=agtzfmxvb3BhYmFja3INCxIETG9vcBiC0aUQDA&domain=my.loopto.do">
-</script>
+<!--<script id="looptodo_loop_embed_code" type="text/javascript" src="http://my.loopto.do/form/js/loop-embed-code.js?loopKey=agtzfmxvb3BhYmFja3INCxIETG9vcBiC0aUQDA&domain=my.loopto.do">
+</script>-->
 <script type="text/javascript">
-    $(function(){
+    /*$(function(){
         looptodo_feedback_btn_init({
             tabs: [
                 {
@@ -117,8 +117,35 @@
             ],
             message: "Взгляд со стороны - самое важное! Поделитесь впечатлением, чтобы BYRG стал лучше. Спасибо!"
         });
-    });
+    }); */
 </script>
+
+<script type='text/javascript'>
+
+    var _ues = {
+        host:'byrggame.userecho.com',
+        forum:'26882',
+        lang:'ru',
+        tab_icon_show:false,
+        tab_corner_radius:8,
+        tab_font_size:20,
+        tab_image_hash:'0L7RgdGC0LDQstC40YLRjCDQvtGC0LfRi9Cy',
+        tab_chat_hash:'0YfQsNGC',
+        tab_alignment:'right',
+        tab_text_color:'#FFFFFF',
+        tab_text_shadow_color:'#00000055',
+        tab_bg_color:'#57A957',
+        tab_hover_color:'#F45C5C'
+    };
+
+    (function() {
+        var _ue = document.createElement('script'); _ue.type = 'text/javascript'; _ue.async = true;
+        _ue.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'cdn.userecho.com/js/widget-1.4.gz.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(_ue, s);
+    })();
+
+</script>
+
 <!-- End LoopTodo Feedback Form Code -->
 {% endblock %}
 </body>

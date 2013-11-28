@@ -48,7 +48,7 @@ function init(app) {
     });
 
     app.get('/join', function (req, res) {
-        var gameId = req.param('id');
+        var gameId = req.param('g');
         gamesController.joinToGame(gameId, function(err, gameInfo){
             if (err) {
                 res.render('game_error', makeParams({error:err}));

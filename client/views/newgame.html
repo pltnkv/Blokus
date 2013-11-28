@@ -1,25 +1,5 @@
 {% extends 'base.html' %}
 
-{% block head %}
-{% parent %}
-
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    /*var socket = io.connect('http://localhost:8888');
-     socket.on('news', function (data) {
-     console.log(data);
-     socket.emit('my other event', { my: 'data' });
-     });*/
-
-
-    $(function(){
-
-    });
-
-
-</script>
-{% endblock %}
-
 {% block content %}
 <div class="container" style="margin-top:80px;">
     <div class="panel panel-default">
@@ -27,22 +7,27 @@
             <h3 class="panel-title">Создать новую игру</h3>
         </div>
         <div class="panel-body">
-
-            <form action="/game" method="post">
-                <br/>
-                <label>Тип игры</label>
-                <select name="fieldType">
-                    <option value="4">На 4-х игроков (Классический блокус)</option>
-                    <option value="2">На 2-х игроков (Блокус Дуо)</option>
+            <form role="form" action="/game" method="post">
+                <div class="form-group">
+                    <label for="fieldType">Тип игры</label>
+                    <select class="form-control" id="fieldType" name="fieldType" style="max-width: 300px;">
+                        <option value="4">На 4-х игроков (Классический блокус)</option>
+                        <option value="2">На 2-х игроков (Блокус Дуо)</option>
                     </select>
-                <br/><br/>
-                <label>Игра за одним компьютером <input name="onlineGame" type="checkbox"/></label>
-                <br/><br/><br/>
+                </div>
+                <div class="checkbox">
+                    <label><input name="onlineGame" type="checkbox"/> игра за одним компьютером </label>
+                    <!--<p class="help-block">В этом случае статистика не сохраняется</p>-->
+                </div>
                 <button type="submit" class="btn btn-primary">Начать играть</button>
             </form>
         </div>
     </div>
 
 </div>
+
+
+
+
 {% endblock %}
 

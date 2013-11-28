@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="/css/game.css">
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/helpers.js"></script>
+<script src="/js/server.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/game.js"></script>
 
@@ -16,9 +17,9 @@
 
 
 {% block content %}
-<div id="init-data" class="hidden" data-game-id="{{ gameInfo.gameId }}"></div>
+<div id="init-data" class="hidden" data-game-id="{{ gameInfo.gameId }}" data-player-hash="{{ gameInfo.playerHash }}"></div>
 
-<!--<div class="navbar navbar-default">
+<div class="navbar navbar-default">
     <ul class="nav navbar-nav navbar-left">
         <li><p class="navbar-text">Ходит: Олег</p></li>
         <li><p class="navbar-text">Счет: 30</p></li>
@@ -28,7 +29,33 @@
         <li><a href="/rules" target="_blank">Правила</a></li>
     </ul>
 </div>
-<div class="player-name"></div>-->
+<div class="player-name"></div>
+
+
+
+<div id="waitingModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Ожидание остальных игроков...</h4>
+            </div>
+            <div class="modal-body">
+                <p>Пригласи друзей через ссылку:<input type="text" class="form-control" id="share-link" value="http://localhost:8888/join?g={{ gameInfo.gameId }}" disabled="disabled"></p>
+
+                <p>Присоединившиеся игроки (1/4):</p>
+                <ul>
+                    <li>Вы</li>
+                    <li>игрок 1</li>
+                    <li>игрок 2</li>
+                    <li>игрок 3</li>
+                </ul>
+
+                <p>Тут должны быть подсказки</p>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 {% endblock %}
 
 

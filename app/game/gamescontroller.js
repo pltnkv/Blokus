@@ -24,7 +24,7 @@ var gamesController = {
 				if (playerHash) {
 					gameData = {
 						gameId: newGameObject.objectId,
-						playerHash: playerHash
+                        playerHash: playerHash
 					};
 				} else {
 					err = "game have not free players";

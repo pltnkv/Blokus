@@ -11,30 +11,38 @@ var log = require('logger')(module)
 
 var Client = clientModule.Client;
 
+
 var clientConnector = {
     numClients: 0,
 
     init: function (app) {
+        var that = this;
         var io = app.get('io');
         io.set('log level', 1);
 
         io.sockets.on('connection', function (socket) {
-            this.numClients++;
-            log.info('client connected' + this.numClients);
-            //socket.emit('news', { hello: 'world' });
+            that.numClients++;
+            log.info('client connected' + that.numClients);
+            // socket.emit('news', { hello: 'world' });
 
             socket.on('disconnect', function () {
                 log.info('client disconnected');
-                this.numClients--;
+                that.numClients--;
             });
 
             socket.on('init', function (data) {
-                // data format: {clientHash:String}
-                Client.getClientByHash(data.clientHash);
-                log.info(data);
+                // data format: {playerHash:String}
+                log.info("data = ", data);
+                var client = Client.getClientByHash(data.playerHash);
+                client.linkSocket(socket);
             });
 
 
+            socket.on('message', function (message, callback) {
+                // data format: {playerHash:String}
+                log.info("message = ", message);
+                callback('123');
+            });
 
         });
     }
