@@ -26,13 +26,14 @@ app.engine('html', swig.renderFile);
 app.set('debug', config.debug);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/../client/views');
-app.set('view cache', false);
+app.set('io', io);
 
 app.use(express.static(__dirname + '/../client/public'));
 app.use(express.bodyParser());
 
 
 routes.init(app);
+clientconnector.init(app);
 
 log.info('debug = ' + app.get('debug'));
 log.info("config: " + config.host, config.port);

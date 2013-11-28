@@ -7,21 +7,38 @@
  */
 var log = require('logger')(module)
     , Class = require('../classy.js')
-    , io = require('socket.io');
+    , clientModule = require('./client.js');
+
+var Client = clientModule.Client;
+
+var clientConnector = {
+    numClients: 0,
+
+    init: function (app) {
+        var io = app.get('io');
+        io.set('log level', 1);
+
+        io.sockets.on('connection', function (socket) {
+            this.numClients++;
+            log.info('client connected' + this.numClients);
+            //socket.emit('news', { hello: 'world' });
+
+            socket.on('disconnect', function () {
+                log.info('client disconnected');
+                this.numClients--;
+            });
+
+            socket.on('init', function (data) {
+                // data format: {clientHash:String}
+                Client.getClientByHash(data.clientHash);
+                log.info(data);
+            });
 
 
-io.set('log level', 1);
-var numClients = 0;
 
-io.sockets.on('connection', function (socket) {
-    numClients++;
-    log.info('client connected ' + numClients);
-    socket.emit('news', { hello: 'world' });
-    socket.on('my other event', function (data) {
-        log.info(data);
-    });
-    socket.on('disconnect', function () {
-        log.info('disconnected');
-        numClients--;
-    })
-});
+        });
+    }
+};
+
+
+module.exports = clientConnector;

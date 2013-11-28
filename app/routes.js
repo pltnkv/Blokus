@@ -33,7 +33,7 @@ function init(app) {
     app.post('/game', function (req, res) {
         var fieldType = parseInt(req.param('fieldType'));
         var isOnlineGame = !!req.param('onlineGame');
-	    gamesController.instance.createGame(fieldType, isOnlineGame, function (err, gameInfo) {
+	    gamesController.createGame(fieldType, isOnlineGame, function (err, gameInfo) {
 		    if (err) {
 			    res.render('game_error', makeParams({error:err}));
 		    } else {
@@ -49,11 +49,11 @@ function init(app) {
 
     app.get('/join', function (req, res) {
         var gameId = req.param('id');
-        gamesController.instance.joinToGame(gameId, function(err, gameInfo){
+        gamesController.joinToGame(gameId, function(err, gameInfo){
             if (err) {
                 res.render('game_error', makeParams({error:err}));
             } else {
-                res.render('joingame', makeParams({gameInfo: gameInfo}));
+                res.render('join', makeParams({gameInfo: gameInfo}));
             }
         });
     });
@@ -101,8 +101,8 @@ function init(app) {
 
 var pageProcessor = {
     adm: function () {
-        return gamesController.instance.getGamesStat();
-    },
+        return gamesController.getGamesStat();
+    }
 };
 
 

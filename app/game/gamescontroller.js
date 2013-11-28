@@ -36,19 +36,24 @@ var gamesController = {
 	},
 
 	joinToGame: function (gameId, callback) {
-		var i, gameObject;
-		for (i = 0; i < allGames.length; i++) {
-			gameObject = allGames[i];
-			if (gameObject.getObjectId() == gameId) {
-                log.info("game founded");
-				break;
-			}
-		}
+        var gameObject = this.getGameById(gameId);
 
-		if (i == allGames.length) {
+		if (!gameObject) {
 			callback('No game found');
 		}
 	},
+
+    getGameById : function(gameId) {
+        var i, gameObject, res;
+        for (i = 0; i < allGames.length; i++) {
+            gameObject = allGames[i];
+            if (gameObject.getObjectId() == gameId) {
+                res = gameObject;
+                break;
+            }
+        }
+        return res;
+    },
 
 	getGamesStat: function () {
 		var games = [
@@ -60,4 +65,4 @@ var gamesController = {
 };
 
 
-module.exports.instance = gamesController;
+module.exports = gamesController;
