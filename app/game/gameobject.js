@@ -7,75 +7,75 @@
  */
 
 var log = require('logger')(module)
-	, Class = require('../classy.js')
-	, mongoose = require('./mongoose.js')
-	, clientModule = require('./client.js');
+    , Class = require('../classy.js')
+    , mongoose = require('./mongoose.js')
+    , clientModule = require('./client.js');
 
 
 var GameObject = Class.$extend({
-	__init__: function () {
-		this.players = [];
-		this.objectId = undefined;
-	},
+    __init__: function () {
+        this.players = [];
+        this.objectId = undefined;
+    },
 
-	configure: function (filedType, isOnlineGame, callback) {
-		var i, gameModel, gameData = {
-			fieldType: filedType,
-			minutesPerSide: 15,
-			onlineMode: isOnlineGame,
-			players: []
-		};
+    configure: function (filedType, isOnlineGame, callback) {
+        var that = this;
+        var i, gameModel, gameData = {
+            fieldType: filedType,
+            minutesPerSide: 15,
+            onlineMode: isOnlineGame,
+            players: []
+        };
 
-		this.createPlayers(filedType);//temporary filedType == numPlayers
+        this.createPlayers(filedType);//temporary filedType == numPlayers
 
-		for (i = 0; i < this.players.length; i++) {
-			var player = this.players[i];
-			var playerData = {
-				hash: player.hash,
-				score: 0
-			};
-			gameData.players.push(playerData);
-		}
+        for (i = 0; i < this.players.length; i++) {
+            var player = this.players[i];
+            var playerData = {
+                hash: player.hash,
+                score: 0
+            };
+            gameData.players.push(playerData);
+        }
 
-		//save to BD
-		gameModel = new mongoose.GameModel(gameData);
-		gameModel.save(function (err) {
-			if (err) {
-				log.error(err);
-			} else {
-				log.info(gameModel._id);
-				this.objectId = gameModel._id;
-			}
-			callback(err);
-		});
-	},
+        //save to BD
+        gameModel = new mongoose.GameModel(gameData);
+        gameModel.save(function (err) {
+            if (err) {
+                log.error(err);
+            } else {
+                that.objectId = '' + gameModel._id;
+            }
+            callback(err);
+        });
+    },
 
-	getFreePlayerHash: function () {
-		var freePlayerHash = undefined;
-		for (var i = 0, l = this.players.length; i < l; i++) {
-			var player = this.players[i];
-			if (player.free) {
-				player.free = false;
-				freePlayerHash = player.hash;
-				if (i == 0) {
-					player.isCreator = true;
-				}
-				break;
-			}
-		}
-		return freePlayerHash;
-	},
+    getFreePlayerHash: function () {
+        var freePlayerHash = undefined;
+        for (var i = 0, l = this.players.length; i < l; i++) {
+            var player = this.players[i];
+            if (player.free) {
+                player.free = false;
+                freePlayerHash = player.hash;
+                if (i == 0) {
+                    player.isCreator = true;
+                }
+                break;
+            }
+        }
+        return freePlayerHash;
+    },
 
-	createPlayers: function (num) {
-		for (var i = 0; i < num; i++) {
-			var player = new clientModule.Client();
-			this.players.push(player);
-		}
-	},
+    createPlayers: function (num) {
+        for (var i = 0; i < num; i++) {
+            var player = new clientModule.Client();
+            this.players.push(player);
+        }
+    },
 
-	getObjectId: function () {
-		return this.objectId;
-	}
+    getObjectId: function () {
+        return this.objectId;
+    }
 
 });
 

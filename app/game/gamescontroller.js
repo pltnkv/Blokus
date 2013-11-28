@@ -15,14 +15,13 @@ var allGames = [];
 var gamesController = {
 
 	createGame: function (fieldType, isOnlineGame, callback) {
-		var newGameObject = new GameObject();
+        var newGameObject = new GameObject();
 
 		newGameObject.configure(fieldType, isOnlineGame, function (err) {
 			var gameData;
 			if (!err) {
 				var playerHash = newGameObject.getFreePlayerHash();
 				if (playerHash) {
-					log.info(newGameObject.objectId);
 					gameData = {
 						gameId: newGameObject.objectId,
 						playerHash: playerHash
@@ -34,7 +33,6 @@ var gamesController = {
 			callback(err, gameData);
 		});
 		allGames.push(newGameObject);
-
 	},
 
 	joinToGame: function (gameId, callback) {
@@ -42,7 +40,7 @@ var gamesController = {
 		for (i = 0; i < allGames.length; i++) {
 			gameObject = allGames[i];
 			if (gameObject.getObjectId() == gameId) {
-				//gameObject.
+                log.info("game founded");
 				break;
 			}
 		}

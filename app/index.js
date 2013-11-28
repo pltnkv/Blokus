@@ -8,7 +8,7 @@
 
 
 var express = require('express')
-	, Class = require('./classy.js')
+    , Class = require('./classy.js')
     , app = express()
     , http = require('http')
     , server = http.createServer(app)
@@ -16,6 +16,7 @@ var express = require('express')
     , log = require('logger')(module)
     , swig = require('swig')
     , config = require('../config.json')
+    , clientconnector = require('./game/clientconnector.js')
     , routes = require('./routes.js');
 
 // assign the swig engine to .html files
@@ -30,19 +31,10 @@ app.set('view cache', false);
 app.use(express.static(__dirname + '/../client/public'));
 app.use(express.bodyParser());
 
-log.info('debug = '  +app.get('debug'));
-
 
 routes.init(app);
 
-
-io.sockets.on('connection', function (socket) {
-    socket.emit('news', { hello: 'world' });
-    socket.on('my other event', function (data) {
-        console.log(data);
-    });
-});
-
+log.info('debug = ' + app.get('debug'));
 log.info("config: " + config.host, config.port);
 server.listen(config.port, config.host);
 log.info("Server started");

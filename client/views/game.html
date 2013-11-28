@@ -8,21 +8,7 @@
 <script src="/js/helpers.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/game.js"></script>
-<script>
-    /*var socket = io.connect('http://localhost:8888');
-     socket.on('news', function (data) {
-     console.log(data);
-     socket.emit('my other event', { my: 'data' });
-     });*/
-</script>
-<script>
-    $(function(){
-        var email = 'pltnkv' + '0@gmail';
-        $('.email').attr('href', 'mailto:'+email);
-    });
-    var globalSettings = {};
-    globalSettings.numPlayers = {{ numPlayers }};
-</script>
+
 {% endblock %}
 
 {% block header %}
@@ -30,7 +16,7 @@
 
 
 {% block content %}
-<div >gameId = {{ gameInfo.gameId }}</div>
+<div id="init-data" class="hidden" data-game-id="{{ gameInfo.gameId }}"></div>
 
 <div class="navbar navbar-default">
     <ul class="nav navbar-nav navbar-left">
@@ -40,7 +26,6 @@
     <ul class="nav navbar-nav navbar-right">
         <li><p class="navbar-text">Подсказка: Используйте колесико для поворота фигуры</p></li>
         <li><a href="/rules" target="_blank">Правила</a></li>
-        <li><a class='email' href=''>Оставить отзыв</a></li>
     </ul>
 </div>
 <div class="player-name"></div>
